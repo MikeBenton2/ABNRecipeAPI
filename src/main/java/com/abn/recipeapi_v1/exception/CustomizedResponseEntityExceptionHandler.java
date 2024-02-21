@@ -1,7 +1,6 @@
 package com.abn.recipeapi_v1.exception;
 
 import com.abn.recipeapi_v1.model.Error;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
