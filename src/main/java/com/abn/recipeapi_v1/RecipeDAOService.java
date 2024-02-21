@@ -7,13 +7,13 @@ import com.abn.recipeapi_v1.model.RecipeProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
-import org.webjars.NotFoundException;
 
-import java.util.*;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
-import java.lang.reflect.*;
 
 // Once we have the database up and running, we can set the default recipes with ID's of 0, 1 and 2
 // Then, the min will be 3 and max will be equal to (min + interval). once the amount of used ID's becomes equal to the
