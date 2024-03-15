@@ -12,3 +12,8 @@ For example, the API should be able to handle the following search requests:
 • All vegetarian recipes
 • Recipes that can serve 4 persons and have “potatoes” as an ingredient
 • Recipes without “salmon” as an ingredient that has “oven” in the instructions
+
+
+
+TO DO:
+In order to run this API locally, please run the command "mvn clean install" in order to generate all the files generated from OpenAPI generator.
