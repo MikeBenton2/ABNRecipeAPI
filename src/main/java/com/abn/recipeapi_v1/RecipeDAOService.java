@@ -98,23 +98,6 @@ public class RecipeDAOService implements RecipesApiDelegate  {
         }
     }
 
-    private Recipe createRecipe(
-            String name,
-            String instructions,
-            Boolean isVegetarian,
-            String numberOfServings,
-            List<Ingredient> ingredients
-    ) {
-        return new Recipe(
-                Generators.timeBasedGenerator().generate(),
-                name,
-                instructions,
-                isVegetarian,
-                numberOfServings,
-                ingredients
-        );
-    }
-
     private GetRecipes200Response findRecipesFor(Integer page, Integer perPage, RecipeProperties fields) {
 
         GetRecipes200Response response = new GetRecipes200Response();
