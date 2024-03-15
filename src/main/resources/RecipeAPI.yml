@@ -23,11 +23,13 @@ paths:
           schema: 
             type: integer
           required: true
-        - in: query
-          name: fields
-          style: deepObject
-          schema:
-            $ref: "#/components/schemas/RecipeProperties"
+      requestBody:
+        description: Recipe field properties
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecipeProperties"
       responses:
         "200":
           description: "A paged array of recipes"
@@ -97,6 +99,10 @@ paths:
       responses:
         "201":
           description: Recipe created successfully.
+          content:
+            "application/json":
+              schema:
+                type: string
         "400":
             description: "Bad Request."
             content:
@@ -122,6 +128,7 @@ paths:
           description: The id of the recipe to retrieve
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           description: Expected response to a valid request
@@ -141,16 +148,21 @@ paths:
           description: The id of the recipe to retrieve
           schema:
             type: string
+            format: uuid
       requestBody:
         description: "Updated Recipe payload"
         required: true
         content:
           "application/json":
             schema:
-              $ref: "#/components/schemas/UpdateRecipe"
+              $ref: "#/components/schemas/UpdatedRecipe"
       responses:
         "201":
-          description: Recipe created successfully.
+          description: Recipe updated successfully.
+          content:
+            "application/json":
+              schema:
+                type: string
         "400":
             description: "Bad Request."
             content:
@@ -175,9 +187,14 @@ paths:
           description: The id of the recipe to retrieve
           schema:
             type: string
+            format: uuid
       responses:
-        "204":
-          description: Recipe deleted
+        "200":
+          description: Recipe deleted successfully.
+          content:
+            "application/json":
+              schema:
+                type: string
         "404":
           description: Recipe ID not found
         "401":
@@ -189,12 +206,13 @@ components:
       allOf:
         - $ref: '#/components/schemas/RecipeProperties'
       required:
+        - id
         - name
         - instructions
         - isVegetarian
         - numberOfServings
         - ingredients
-    UpdateRecipe:
+    UpdatedRecipe:
       type: object
       allOf:
         - $ref: '#/components/schemas/RecipeProperties'
@@ -202,7 +220,8 @@ components:
       type: object
       properties:
         id:
-          type: integer 
+          type: string
+          format: uuid
           readOnly: true
         name:
           type: string
@@ -226,11 +245,18 @@ components:
         required:
             - name
             - required
+            - included
         properties:
+            id:
+              type: string
+              format: uuid
+              readOnly: true
             name:
               type: string
               minLength: 1
             required:
+              type: boolean
+            included:
               type: boolean
     PaginatedResult:
       type: object

@@ -1,243 +1,192 @@
 package com.abn.recipeapi_v1;
 
-import com.abn.recipeapi_v1.model.GetRecipes200Response;
-import com.abn.recipeapi_v1.model.Ingredient;
-import com.abn.recipeapi_v1.model.Recipe;
-import com.abn.recipeapi_v1.model.RecipeProperties;
+import com.abn.recipeapi_v1.model.*;
+import com.fasterxml.uuid.Generators;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.lang.reflect.Type;
+import java.net.URI;
+import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
-// Once we have the database up and running, we can set the default recipes with ID's of 0, 1 and 2
-// Then, the min will be 3 and max will be equal to (min + interval). once the amount of used ID's becomes equal to the
-// max, then we set min = max and again set max to (min + interval)
-
-@Component
-public class RecipeDAOService {
-    private final List<Recipe> recipes = new ArrayList<>();
-    private final RecipeIDGenerator recipeIDGenerator = new RecipeIDGenerator();
+@Service
+public class RecipeDAOService implements RecipesApiDelegate  {
+    private List<Recipe> recipes = new ArrayList<>();
     public RecipeDAOService() {
-        generateDefaultRecipes();
-    }
-    private void generateDefaultRecipes() {
-        Recipe recipe1 = new Recipe(
-                "vegetarian recipe name",
-                "vegetarian recipe instructions",
-                true,
-                "5",
-                new ArrayList<>(Arrays.asList(new Ingredient("name", true),
-                        new Ingredient("second name", true)
-                )
-                ));
-        recipe1.setId(recipeIDGenerator.generateID());
-        recipes.add(recipe1);
-
-        Recipe recipe2 = new Recipe(
-                "vegetarian recipe name",
-                "vegetarian recipe instructions",
-                true,
-                "5",
-                new ArrayList<>(Arrays.asList(new Ingredient("name", true),
-                        new Ingredient("second name", true)
-                )
-                ));
-        recipe2.setId(recipeIDGenerator.generateID());
-        recipes.add(recipe2);
-
-        Recipe recipe3 = new Recipe(
-                "recipe name",
-                "recipe instructions",
-                true,
-                "3",
-                new ArrayList<>(Arrays.asList(new Ingredient("name", true),
-                        new Ingredient("second name", true)
-                )
-                ));
-        recipe3.setId(recipeIDGenerator.generateID());
-        recipes.add(recipe3);
-
-        Recipe recipe4 = new Recipe(
-                "recipe name",
-                "recipe instructions",
-                true,
-                "3",
-                new ArrayList<>(Arrays.asList(new Ingredient("name", true),
-                        new Ingredient("second name", true)
-                )
-                ));
-        recipe4.setId(recipeIDGenerator.generateID());
-        recipes.add(recipe4);
-
-        Recipe recipe5 = new Recipe(
-                "recipe name",
-                "recipe instructions",
-                true,
-                "3",
-                new ArrayList<>(Arrays.asList(new Ingredient("name", true),
-                        new Ingredient("second name", true)
-                )
-                ));
-        recipe5.setId(recipeIDGenerator.generateID());
-        recipes.add(recipe5);
-
-        Recipe recipe6 = new Recipe(
-                "vegetarian recipe name",
-                "vegetarian recipe instructions",
-                true,
-                "5",
-                new ArrayList<>(Arrays.asList(new Ingredient("name", true),
-                        new Ingredient("second name", true)
-                )
-                ));
-        recipe6.setId(recipeIDGenerator.generateID());
-        recipes.add(recipe6);
-
-        Recipe recipe7 = new Recipe(
-                "vegetarian recipe name",
-                "vegetarian recipe instructions",
-                true,
-                "5",
-                new ArrayList<>(Arrays.asList(new Ingredient("name", true),
-                        new Ingredient("second name", true)
-                )
-                ));
-        recipe7.setId(recipeIDGenerator.generateID());
-        recipes.add(recipe7);
-
-        Recipe recipe8 = new Recipe(
-                "recipe name",
-                "recipe instructions",
-                true,
-                "3",
-                new ArrayList<>(Arrays.asList(new Ingredient("name", true),
-                        new Ingredient("second name", true)
-                )
-                ));
-        recipe8.setId(recipeIDGenerator.generateID());
-        recipes.add(recipe8);
-
-        Recipe recipe9 = new Recipe(
-                "recipe name",
-                "recipe instructions",
-                true,
-                "3",
-                new ArrayList<>(Arrays.asList(new Ingredient("name", true),
-                        new Ingredient("second name", true)
-                )
-                ));
-        recipe9.setId(recipeIDGenerator.generateID());
-        recipes.add(recipe9);
-
-        Recipe recipe10 = new Recipe(
-                "recipe name",
-                "recipe instructions",
-                true,
-                "3",
-                new ArrayList<>(Arrays.asList(new Ingredient("name", true),
-                        new Ingredient("second name", true)
-                )
-                ));
-        recipe10.setId(recipeIDGenerator.generateID());
-        recipes.add(recipe10);
-
-        Recipe recipe11 = new Recipe(
-                "recipe name",
-                "recipe instructions",
-                true,
-                "3",
-                new ArrayList<>(Arrays.asList(new Ingredient("name", true),
-                        new Ingredient("second name", true)
-                )
-                ));
-        recipe11.setId(recipeIDGenerator.generateID());
-        recipes.add(recipe11);
+        retrieveDefaultRecipesFromJSON();
     }
 
-    public GetRecipes200Response findRecipesFor(Integer page, Integer perPage, RecipeProperties fields) {
+    //<editor-fold desc="HTTP Methods">
+    @Override
+    public ResponseEntity<GetRecipes200Response> getRecipes(Integer page, Integer perPage, RecipeProperties fields) {
+        GetRecipes200Response response = findRecipesFor(page, perPage, fields);
+        if (CollectionUtils.isEmpty(response.getResults())) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Recipe> getRecipeById(UUID recipeId) {
+        RecipeProperties properties = new RecipeProperties();
+        properties.setId(recipeId);
+        Set<Recipe> recipes = findRecipesBy(properties);
+
+        if (CollectionUtils.isEmpty(recipes)) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return new ResponseEntity<>(recipes.stream().findFirst().orElseThrow(), HttpStatus.OK);
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> createRecipe(Recipe recipe) {
+        recipe.setId(Generators.timeBasedGenerator().generate());
+        recipes.add(recipe);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{recipeId}")
+                .buildAndExpand(recipe.getId())
+                .toUri();
+        return ResponseEntity.created(location).build();
+    }
+
+    @Override
+    public ResponseEntity<String> deleteRecipe(UUID recipeId) {
+        boolean success = deleteRecipeBy(recipeId);
+        if (success) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @Override
+    public ResponseEntity<String> updateRecipe(UUID recipeId, UpdatedRecipe recipeToBeUpdated) {
+        patchRecipe(recipeId, recipeToBeUpdated);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{recipeID}")
+                .buildAndExpand(recipeId)
+                .toUri();
+        return ResponseEntity.created(location).build();
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Helper Functions">
+    private void retrieveDefaultRecipesFromJSON() {
+        Gson gson = new Gson();
+
+        try (FileReader reader = new FileReader("src/main/resources/recipes.json")) {
+            //Read JSON file
+            Type userListType = new TypeToken<List<Recipe>>(){}.getType();
+            recipes = gson.fromJson(reader, userListType);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Recipe createRecipe(
+            String name,
+            String instructions,
+            Boolean isVegetarian,
+            String numberOfServings,
+            List<Ingredient> ingredients
+    ) {
+        return new Recipe(
+                Generators.timeBasedGenerator().generate(),
+                name,
+                instructions,
+                isVegetarian,
+                numberOfServings,
+                ingredients
+        );
+    }
+
+    private GetRecipes200Response findRecipesFor(Integer page, Integer perPage, RecipeProperties fields) {
 
         GetRecipes200Response response = new GetRecipes200Response();
-
-        if (!allNull(fields)) {
-           response.setResults(findRecipesBy(fields));
-           return response;
-        }
+        int lowerRange = page * perPage;
+        int upperRange = (lowerRange + perPage) - 1;
 
         response.setPage(page);
         response.setPerPage(perPage);
-        
-        int lowerRange = (page - 1) * perPage;
-        int upperRange = (page * perPage) - 1;
+
+        if (!allNull(fields)) {
+           response.setResults(findRecipesBy(fields).stream().toList());
+        } else {
+            try {
+                response.setResults(recipes.subList(lowerRange, upperRange));
+                response.setHasNext(true);
+            } catch (Exception exception) {
+                response.setResults(recipes.subList(lowerRange, recipes.size()));
+            }
+        }
 
         if (upperRange >= recipes.size()) {
             response.setHasNext(false);
         }
 
-        try {
-            response.setResults(recipes.subList(lowerRange, upperRange));
-            response.setHasNext(true);
-            return response;
-        } catch (Exception exception) {
-            response.setResults(recipes.subList(lowerRange, recipes.size()));
-            return response;
-        }
+        return response;
     }
 
-    public List<Recipe> findRecipesBy(RecipeProperties fields) {
+    private Set<Recipe> findRecipesBy(@NotNull RecipeProperties fields) {
 
-        List<Predicate<Recipe>> allPredicates = new ArrayList<>();
+        List<Predicate<Recipe>> predicates = new ArrayList<>();
+        Set<Recipe> matchedRecipes = new HashSet<>();
 
-        if (fields.getId() != null && fields.getId() >= 0) {
-            allPredicates.add(recipe -> recipe.getId().equals(fields.getId()));
+//        Look into Integration tests via web tab @SpringBootTest
+
+        if (fields.getIngredients() != null) {
+            matchedRecipes = findRecipesMatchingIngredients(fields.getIngredients());
+        }
+        if (fields.getId() != null) {
+            predicates.add(recipe -> recipe.getId().equals(fields.getId()));
         }
         if (fields.getName() != null) {
-            allPredicates.add(recipe -> recipe.getName().contains(fields.getName()));
+            predicates.add(recipe -> recipe.getName().toLowerCase().contains(fields.getName().toLowerCase()));
         }
         if (fields.getInstructions() != null) {
-            allPredicates.add(recipe -> recipe.getInstructions().contains(fields.getInstructions()));
+            predicates.add(recipe -> recipe.getInstructions().toLowerCase().contains(fields.getInstructions().toLowerCase()));
         }
         if (fields.getIsVegetarian() != null) {
-            allPredicates.add(recipe -> recipe.getIsVegetarian().equals(fields.getIsVegetarian()));
+            predicates.add(recipe -> recipe.getIsVegetarian().equals(fields.getIsVegetarian()));
         }
         if (fields.getNumberOfServings() != null) {
-            allPredicates.add(recipe -> recipe.getNumberOfServings().equals(fields.getNumberOfServings()));
+            predicates.add(recipe -> recipe.getNumberOfServings().equals(fields.getNumberOfServings()));
         }
 
-        if (allPredicates.isEmpty()) {
-            return null;
-        }
-
-        try {
+        if (matchedRecipes.isEmpty()) {
             return recipes.stream()
-                    .filter(allPredicates.stream().reduce(x -> true, Predicate::and)).toList();
-        } catch (Exception exception) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+                    .filter(predicates.stream().reduce(x -> true, Predicate::and))
+                    .collect(Collectors.toSet());
+        } else {
+            return matchedRecipes.stream()
+                    .filter(predicates.stream().reduce(x -> true, Predicate::and))
+                    .collect(Collectors.toSet());
         }
     }
 
-    public int addRecipe(Recipe recipe) {
-        int id = recipeIDGenerator.generateID();
-        recipe.setId(id);
-        recipes.add(recipe);
-        return id;
-    }
-
-    public void deleteRecipeBy(int id) {
+    private boolean deleteRecipeBy(UUID id) {
         Predicate<? super Recipe> predicate = recipe -> recipe.getId().equals(id);
-        boolean found = recipes.removeIf(predicate);
-
-        if (!found) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+        return recipes.removeIf(predicate);
     }
 
     private static boolean allNull(Object target) {
+        if (target == null) { return true; }
+
         return Arrays.stream(target.getClass()
                         .getDeclaredFields())
                 .peek(f -> f.setAccessible(true))
@@ -252,4 +201,95 @@ public class RecipeDAOService {
             throw new RuntimeException(e);
         }
     }
+
+    private void patchRecipe(UUID id, UpdatedRecipe updatedRecipe) {
+
+        // Find recipe by ID
+        RecipeProperties properties = new RecipeProperties();
+        properties.setId(id);
+        Set<Recipe> recipes = findRecipesBy(properties);
+        Recipe recipeToUpdate;
+
+        if (!CollectionUtils.isEmpty(recipes)) {
+            recipeToUpdate = recipes.iterator().next();
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        updatedRecipe.setId(recipeToUpdate.getId());
+        Recipe incompleteRecipe = createRecipeObjectFrom(updatedRecipe);
+        Field[] recipeFieldsToUpdate = recipeToUpdate.getClass().getDeclaredFields();
+
+        for (Field recipeField : recipeFieldsToUpdate) {
+            recipeField.setAccessible(true);
+
+            Object recipeValueToUpdate;
+
+            try {
+                recipeValueToUpdate = recipeField.get(incompleteRecipe);
+                if (recipeValueToUpdate != null) {
+                    recipeField.set(recipeToUpdate, recipeValueToUpdate); // Should never fail since the value was found
+                }
+            } catch (Exception ignored) {
+                continue;
+            }
+
+            recipeField.setAccessible(false);
+        }
+    }
+
+    /* We want to match the included recipe ingredients count with the field ingredients count. This means, the recipe
+    contains all the fields(request) ingredients. Eg. Find me all recipes that include 'Onion' and 'Garlic', but exclude
+    'Cheese'. The included count is 2 so if we go through each recipe and it equals 2 at the end then we can add it to
+    the list of matching recipes.
+    */
+    private Set<Recipe> findRecipesMatchingIngredients(List<Ingredient> includedAndExcludedIngredients) {
+        int fieldIngredientIncludedCount = 0;
+        int recipeIngredientIncludedCount = 0;
+        boolean excludeRecipe = false;
+        HashSet<Recipe> matchingRecipes = new HashSet<>();
+
+        for (Ingredient includedOrExcludedIngredient : includedAndExcludedIngredients) {
+            if (includedOrExcludedIngredient.getIncluded()) {
+                fieldIngredientIncludedCount++;
+            }
+        }
+
+        for (Recipe recipe : recipes) {
+            for (Ingredient ingredient : recipe.getIngredients()) {
+                for (Ingredient includedOrExcludedIngredient : includedAndExcludedIngredients) {
+
+                    if (includedOrExcludedIngredient.getName().equals(ingredient.getName())) {
+                        if (!includedOrExcludedIngredient.getIncluded()) {
+                            excludeRecipe = true;
+                        } else {
+                            recipeIngredientIncludedCount++;
+                        }
+                    }
+                }
+            }
+
+            if (excludeRecipe) {
+                excludeRecipe = false;
+            } else if (fieldIngredientIncludedCount == recipeIngredientIncludedCount) {
+                matchingRecipes.add(recipe);
+            }
+
+            recipeIngredientIncludedCount = 0;
+        }
+
+        return matchingRecipes;
+    }
+
+    private Recipe createRecipeObjectFrom(UpdatedRecipe incompleteRecipe) {
+        return new Recipe(
+                incompleteRecipe.getId(),
+                incompleteRecipe.getName(),
+                incompleteRecipe.getInstructions(),
+                incompleteRecipe.getIsVegetarian(),
+                incompleteRecipe.getNumberOfServings(),
+                incompleteRecipe.getIngredients()
+        );
+    }
+    //</editor-fold>
 }
