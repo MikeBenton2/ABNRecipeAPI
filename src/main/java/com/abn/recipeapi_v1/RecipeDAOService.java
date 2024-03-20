@@ -1,5 +1,6 @@
 package com.abn.recipeapi_v1;
 
+import com.abn.recipeapi_v1.exception.APIRequestException;
 import com.abn.recipeapi_v1.model.*;
 import com.fasterxml.uuid.Generators;
 import com.google.gson.Gson;
@@ -9,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.FileReader;
@@ -33,7 +33,7 @@ public class RecipeDAOService implements RecipesApiDelegate  {
     public ResponseEntity<GetRecipes200Response> getRecipes(Integer page, Integer perPage, RecipeProperties fields) {
         GetRecipes200Response response = findRecipesFor(page, perPage, fields);
         if (CollectionUtils.isEmpty(response.getResults())) {
-            return ResponseEntity.notFound().build();
+            throw new APIRequestException("No Recipes found");
         }
 
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -46,7 +46,7 @@ public class RecipeDAOService implements RecipesApiDelegate  {
         Set<Recipe> recipes = findRecipesBy(properties);
 
         if (CollectionUtils.isEmpty(recipes)) {
-            return ResponseEntity.notFound().build();
+            throw new APIRequestException("Recipe with ID: " + recipeId + "not found");
         } else {
             return new ResponseEntity<>(recipes.stream().findFirst().orElseThrow(), HttpStatus.OK);
         }
@@ -69,16 +69,16 @@ public class RecipeDAOService implements RecipesApiDelegate  {
         if (success) {
             return ResponseEntity.ok().build();
         }
-        return ResponseEntity.notFound().build();
+        throw new APIRequestException("Unable to delete recipe with ID: " + recipeId);
     }
 
     @Override
-    public ResponseEntity<String> updateRecipe(UUID recipeId, UpdatedRecipe recipeToBeUpdated) {
-        patchRecipe(recipeId, recipeToBeUpdated);
+    public ResponseEntity<String> updateRecipe(UpdatedRecipe updatedRecipe) {
+        patchRecipe(updatedRecipe);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{recipeID}")
-                .buildAndExpand(recipeId)
+                .path("/{updatedRecipe.getId()}")
+                .buildAndExpand(updatedRecipe.getId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
@@ -185,18 +185,18 @@ public class RecipeDAOService implements RecipesApiDelegate  {
         }
     }
 
-    private void patchRecipe(UUID id, UpdatedRecipe updatedRecipe) {
+    private void patchRecipe(UpdatedRecipe updatedRecipe) {
 
         // Find recipe by ID
         RecipeProperties properties = new RecipeProperties();
-        properties.setId(id);
+        properties.setId(updatedRecipe.getId());
         Set<Recipe> recipes = findRecipesBy(properties);
         Recipe recipeToUpdate;
 
         if (!CollectionUtils.isEmpty(recipes)) {
             recipeToUpdate = recipes.iterator().next();
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new APIRequestException("Recipe with ID: " + updatedRecipe.getId() + "Not Found");
         }
 
         updatedRecipe.setId(recipeToUpdate.getId());

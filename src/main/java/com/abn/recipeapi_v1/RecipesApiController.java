@@ -55,7 +55,7 @@ public class RecipesApiController implements RecipesApi {
     }
 
     @Override
-    public ResponseEntity<String> updateRecipe(UUID recipeId, UpdatedRecipe recipeToBeUpdated) {
-        return service.updateRecipe(recipeId, recipeToBeUpdated);
+    public ResponseEntity<String> updateRecipe(UpdatedRecipe updatedRecipe) {
+        return service.updateRecipe(updatedRecipe);
     }
 }
