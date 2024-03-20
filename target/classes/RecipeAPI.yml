@@ -1,0 +1,277 @@
+openapi: "3.0.0"
+info:
+  title: "Recipe API"
+  version: "1.0"
+  description:
+    "This API allows users to manage their favourite recipes by allowing them to add, update, remove and fetch recipes."
+  x-apiType: "public"
+paths:
+  /recipes:
+    get:
+      summary: Get all recipes
+      operationId: getRecipes
+      tags:
+        - recipe
+      parameters:
+        - in: query
+          name: page 
+          schema: 
+            type: integer
+          required: true
+        - in: query
+          name: per_page
+          schema: 
+            type: integer
+          required: true
+      requestBody:
+        description: Recipe field properties
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecipeProperties"
+      responses:
+        "200":
+          description: "A paged array of recipes"
+          content:
+            "application/json":
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginatedResult"
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Recipe"
+        "400":
+          description: "Bad Request."
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                {
+                  "errors": 
+                    [
+                      {
+                        "code": "invalid_parameters",
+                        "message": "The parameters sent are invalid.",
+                        "status": "404"
+                      }
+                    ]
+                }
+        "404":
+          description: "No recipes found."
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                {
+                  "errors": 
+                  [
+                    {
+                      "code": "empty_recipe_repository",
+                      "message": "Their are no recipes saved.",
+                      "status": "404"
+                    }
+                  ]
+                }
+        "500":
+          description: "Server error"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: Create a recipe
+      operationId: createRecipe
+      tags:
+        - recipe
+      requestBody:
+        description: "Create Recipe payload"
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/Recipe"
+      responses:
+        "201":
+          description: Recipe created successfully.
+          content:
+            "application/json":
+              schema:
+                type: string
+        "400":
+            description: "Bad Request."
+            content:
+              "application/json":
+                schema:
+                  $ref: "#/components/schemas/Error"
+        "500":
+          description: "Server error"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      summary: Update a recipe
+      operationId: updateRecipe
+      tags:
+        - recipe
+      requestBody:
+        description: "Updated Recipe payload"
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/UpdatedRecipe"
+      responses:
+        "201":
+          description: Recipe updated successfully.
+          content:
+            "application/json":
+              schema:
+                type: string
+        "400":
+          description: "Bad Request."
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Server error"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Error"
+  /recipes/{recipeId}:
+    get:
+      summary: Info for a specific recipe
+      operationId: getRecipeById
+      tags:
+        - recipe
+      parameters:
+        - name: recipeId
+          in: path
+          required: true
+          description: The id of the recipe to retrieve
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Recipe"
+    delete:
+      summary: Delete recipe by id
+      operationId: deleteRecipe
+      tags:
+        - recipe
+      parameters:
+        - name: recipeId
+          in: path
+          required: true
+          description: The id of the recipe to retrieve
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Recipe deleted successfully.
+          content:
+            "application/json":
+              schema:
+                type: string
+        "404":
+          description: Recipe ID not found
+        "401":
+          description: Unauthorized
+components:
+  schemas:
+    Recipe:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/RecipeProperties'
+      required:
+        - id
+        - name
+        - instructions
+        - isVegetarian
+        - numberOfServings
+        - ingredients
+    UpdatedRecipe:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/RecipeProperties'
+    RecipeProperties:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          minLength: 1
+        instructions:
+          type: string
+          minLength: 1
+        isVegetarian:
+          type: boolean
+        numberOfServings:
+          type: string
+          pattern: "^[0-9]*$"
+        ingredients:
+          type: array
+          minItems: 1
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/Ingredient"
+    Ingredient:
+        type: object
+        required:
+            - name
+            - required
+            - included
+        properties:
+            id:
+              type: string
+              format: uuid
+              readOnly: true
+            name:
+              type: string
+              minLength: 1
+            required:
+              type: boolean
+            included:
+              type: boolean
+    PaginatedResult:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+        per_page: 
+          type: integer
+          format: int32
+        has_next:
+          type: boolean
+        results: 
+          type: array
+          items: {}  #  any type of items
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
