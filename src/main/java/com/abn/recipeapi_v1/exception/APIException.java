@@ -4,6 +4,6 @@ import org.springframework.http.HttpStatus;
 
 import java.time.ZonedDateTime;
 
-public record APIException(String message, Throwable throwable, HttpStatus status, ZonedDateTime timestamp) {
+public record APIException(String message, HttpStatus status, ZonedDateTime timestamp) {
 
 }

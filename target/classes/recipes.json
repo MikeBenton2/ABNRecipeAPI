@@ -1,175 +1,142 @@
 [
   {
-    "id": "a0793ac0-e204-11ee-aee1-677ba1eeb179",
     "name": "Chickpea Curry",
     "instructions": "vegetarian recipe instructions",
     "isVegetarian": true,
     "numberOfServings": "4",
-    "ingredients": [
+    "recipeIngredients": [
       {
-        "id": "a0793aba-e204-11ee-aee1-4793a0ec5648",
-        "name": "Onion",
-        "required": true,
-        "included": true
+        "ingredient": {
+          "name": "Garlic"
+        }
       },
       {
-        "id": "a0793abb-e204-11ee-aee1-1157903893ae",
-        "name": "Garlic",
-        "required": true,
-        "included": true
+        "ingredient": {
+          "name": "Chickpeas"
+        }
       },
       {
-        "id": "a0793abc-e204-11ee-aee1-efe40e908976",
-        "name": "Chickpeas",
-        "required": true,
-        "included": true
+        "ingredient": {
+          "name": "Curry Powder"
+        }
       },
       {
-        "id": "a0793abd-e204-11ee-aee1-b517c5810fda",
-        "name": "Curry Powder",
-        "required": false,
-        "included": true
-      },
-      {
-        "id": "a0793abf-e204-11ee-aee1-9928f6950272",
-        "name": "Red Onions",
-        "required": true,
-        "included": true
+        "ingredient": {
+          "name": "Red Onions"
+        }
       }
     ]
   },
   {
-    "id": "a0793ac7-e204-11ee-aee1-2b0a08070f39",
     "name": "Lasagna",
     "instructions": "Lasagna recipe instructions",
     "isVegetarian": false,
     "numberOfServings": "6",
-    "ingredients": [
+    "recipeIngredients": [
       {
-        "id": "a0793ac1-e204-11ee-aee1-cdc7881ee23d",
-        "name": "Onion",
-        "required": true,
-        "included": true
+        "ingredient": {
+          "name": "Onions"
+        }
       },
       {
-        "id": "a0793ac2-e204-11ee-aee1-f97d3fe03325",
-        "name": "Garlic",
-        "required": true,
-        "included": true
+        "ingredient": {
+          "name": "Garlic"
+        }
       },
       {
-        "id": "a0793ac3-e204-11ee-aee1-3d100150aaf8",
-        "name": "Beef",
-        "required": true,
-        "included": true
+        "ingredient": {
+          "name": "Beef"
+        }
       },
       {
-        "id": "a0793ac4-e204-11ee-aee1-7fd32be98aab",
-        "name": "Pasta Sauce",
-        "required": false,
-        "included": true
+        "ingredient": {
+          "name": "Pasta Sauce"
+        }
       },
       {
-        "id": "a0793ac5-e204-11ee-aee1-f718d51dc76a",
-        "name": "Cheese",
-        "required": true,
-        "included": true
+        "ingredient": {
+          "name": "Cheese"
+        }
       },
       {
-        "id": "a0793ac6-e204-11ee-aee1-e77276d29850",
-        "name": "Lasagna Noodles",
-        "required": true,
-        "included": true
+        "ingredient": {
+          "name": "Lasagna Noodles"
+        }
       }
     ]
   },
   {
-    "id": "a0793ad1-e204-11ee-aee1-c145bc300a42",
     "name": "Pizza",
     "instructions": "Pizza recipe instructions",
     "isVegetarian": true,
     "numberOfServings": "2",
-    "ingredients": [
+    "recipeIngredients": [
       {
-        "id": "a0793acb-e204-11ee-aee1-835659dcf3d5",
-        "name": "Onion",
-        "required": true,
-        "included": true
+        "ingredient": {
+          "name": "Onions"
+        }
       },
       {
-        "id": "a0793acc-e204-11ee-aee1-e3af3eecefd6",
-        "name": "Garlic",
-        "required": true,
-        "included": true
+        "ingredient": {
+          "name": "Garlic"
+        }
       },
       {
-        "id": "a0793acd-e204-11ee-aee1-bbe9b0b1df60",
-        "name": "Peppers",
-        "required": true,
-        "included": true
+        "ingredient": {
+          "name": "Peppers"
+        }
       },
       {
-        "id": "a0793ace-e204-11ee-aee1-734e8972f02a",
-        "name": "Pineapple",
-        "required": false,
-        "included": true
+        "ingredient": {
+          "name": "Pineapple"
+        }
       },
       {
-        "id": "a0793acf-e204-11ee-aee1-e5c4f707120d",
-        "name": "Cheese",
-        "required": true,
-        "included": true
+        "ingredient": {
+          "name": "Cheese"
+        }
       },
       {
-        "id": "a0793ad0-e204-11ee-aee1-9de40b503c68",
-        "name": "Pizza sauce",
-        "required": true,
-        "included": true
+        "ingredient": {
+          "name": "Pizza sauce"
+        }
       }
     ]
   },
   {
-    "id": "a07961e8-e204-11ee-aee1-f146bbae5eb0",
     "name": "Burgers",
     "instructions": "Burgers recipe instructions",
     "isVegetarian": false,
     "numberOfServings": "1",
-    "ingredients": [
+    "recipeIngredients": [
       {
-        "id": "a0793ad2-e204-11ee-aee1-3b0759cb36f5",
-        "name": "Onion",
-        "required": true,
-        "included": true
+        "ingredient": {
+          "name": "Onions"
+        }
       },
       {
-        "id": "a0793ad3-e204-11ee-aee1-31f7ece4c181",
-        "name": "Garlic",
-        "required": true,
-        "included": true
+        "ingredient": {
+          "name": "Garlic"
+        }
       },
       {
-        "id": "a0793ad4-e204-11ee-aee1-17837c0dd03c",
-        "name": "Beef Patty",
-        "required": true,
-        "included": true
+        "ingredient": {
+          "name": "Beef Patty"
+        }
+      },
+      {"ingredient": {
+        "name": "Buns"
+      }
       },
       {
-        "id": "a0793ad5-e204-11ee-aee1-59d0a67e8e6d",
-        "name": "Buns",
-        "required": true,
-        "included": true
+        "ingredient": {
+          "name": "Cheese"
+        }
       },
       {
-        "id": "a07961e6-e204-11ee-aee1-3b90d3bafb87",
-        "name": "Cheese",
-        "required": false,
-        "included": true
-      },
-      {
-        "id": "a07961e7-e204-11ee-aee1-13439750a672",
-        "name": "Ketchup",
-        "required": false,
-        "included": true
+        "ingredient": {
+          "name": "Ketchup"
+        }
       }
     ]
   }

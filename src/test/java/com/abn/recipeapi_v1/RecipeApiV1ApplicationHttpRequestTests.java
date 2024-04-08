@@ -1,6 +1,7 @@
 package com.abn.recipeapi_v1;
 
 import com.abn.recipeapi_v1.model.GetRecipes200Response;
+import com.abn.recipeapi_v1.services.RecipeDAOService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

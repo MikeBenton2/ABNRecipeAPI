@@ -1,9 +1,12 @@
 /Users/michaelbenton/Developer/Workspace/RecipeAPI_V1/target/generated-sources/openapi/src/main/java/com/abn/recipeapi_v1/model/RecipeProperties.java
 /Users/michaelbenton/Developer/Workspace/RecipeAPI_V1/src/main/java/com/abn/recipeapi_v1/exception/APIExceptionHandler.java
 /Users/michaelbenton/Developer/Workspace/RecipeAPI_V1/src/main/java/com/abn/recipeapi_v1/RecipeApiV1Application.java
+/Users/michaelbenton/Developer/Workspace/RecipeAPI_V1/src/main/java/com/abn/recipeapi_v1/IngredientRepository.java
+/Users/michaelbenton/Developer/Workspace/RecipeAPI_V1/src/main/java/com/abn/recipeapi_v1/RecipeRepository.java
 /Users/michaelbenton/Developer/Workspace/RecipeAPI_V1/target/generated-sources/openapi/src/main/java/com/abn/recipeapi_v1/model/Recipe.java
 /Users/michaelbenton/Developer/Workspace/RecipeAPI_V1/target/generated-sources/openapi/src/main/java/com/abn/recipeapi_v1/RecipesApi.java
 /Users/michaelbenton/Developer/Workspace/RecipeAPI_V1/target/generated-sources/openapi/src/main/java/com/abn/recipeapi_v1/model/Error.java
+/Users/michaelbenton/Developer/Workspace/RecipeAPI_V1/target/generated-sources/openapi/src/main/java/com/abn/recipeapi_v1/model/RecipeIngredient.java
 /Users/michaelbenton/Developer/Workspace/RecipeAPI_V1/target/generated-sources/openapi/src/main/java/com/abn/recipeapi_v1/model/GetRecipes200Response.java
 /Users/michaelbenton/Developer/Workspace/RecipeAPI_V1/target/generated-sources/openapi/src/main/java/com/abn/recipeapi_v1/model/UpdatedRecipe.java
 /Users/michaelbenton/Developer/Workspace/RecipeAPI_V1/target/generated-sources/openapi/src/main/java/com/abn/recipeapi_v1/RecipesApiDelegate.java
@@ -14,3 +17,4 @@
 /Users/michaelbenton/Developer/Workspace/RecipeAPI_V1/src/main/java/com/abn/recipeapi_v1/RecipeDAOService.java
 /Users/michaelbenton/Developer/Workspace/RecipeAPI_V1/target/generated-sources/openapi/src/main/java/com/abn/recipeapi_v1/ApiUtil.java
 /Users/michaelbenton/Developer/Workspace/RecipeAPI_V1/src/main/java/com/abn/recipeapi_v1/exception/APIException.java
+/Users/michaelbenton/Developer/Workspace/RecipeAPI_V1/target/generated-sources/openapi/src/main/java/com/abn/recipeapi_v1/model/RecipeIngredientId.java

@@ -3,12 +3,14 @@ package com.abn.recipeapi_v1.model;
 import java.net.URI;
 import java.util.Objects;
 import com.abn.recipeapi_v1.model.Ingredient;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
@@ -20,16 +22,20 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.*;
 import jakarta.annotation.Generated;
 
+import static jakarta.persistence.GenerationType.SEQUENCE;
+
 /**
  * Recipe
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-03-20T12:28:10.528866+01:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-03-27T16:17:05.660628+01:00[Europe/Amsterdam]")
+@jakarta.persistence.Entity(name = "Recipe")
 public class Recipe implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  private UUID id;
+  @jakarta.persistence.Id @jakarta.persistence.SequenceGenerator ( name = "recipe_sequence", sequenceName = "recipe_sequence", allocationSize = 1 ) @jakarta.persistence.GeneratedValue ( strategy = SEQUENCE, generator = "recipe_sequence" )
+  private Long id;
 
   private String name;
 
@@ -37,10 +43,11 @@ public class Recipe implements Serializable {
 
   private Boolean isVegetarian;
 
-  private String numberOfServings;
+  private Integer numberOfServings;
 
+  @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
   @Valid
-  private List<@Valid Ingredient> ingredients = new ArrayList<>();
+  public List<RecipeIngredient> recipeIngredients = new ArrayList<>();
 
   public Recipe() {
     super();
@@ -49,16 +56,15 @@ public class Recipe implements Serializable {
   /**
    * Constructor with only required parameters
    */
-  public Recipe(UUID id, String name, String instructions, Boolean isVegetarian, String numberOfServings, List<@Valid Ingredient> ingredients) {
-    this.id = id;
+  public Recipe(String name, String instructions, Boolean isVegetarian, Integer numberOfServings, List<@Valid RecipeIngredient> ingredients) {
     this.name = name;
     this.instructions = instructions;
     this.isVegetarian = isVegetarian;
     this.numberOfServings = numberOfServings;
-    this.ingredients = ingredients;
+    this.recipeIngredients = ingredients;
   }
 
-  public Recipe id(UUID id) {
+  public Recipe id(Long id) {
     this.id = id;
     return this;
   }
@@ -67,14 +73,14 @@ public class Recipe implements Serializable {
    * Get id
    * @return id
   */
-  @Valid 
-  @Schema(name = "id", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
+  
+  @Schema(name = "id", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
-  public UUID getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(UUID id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
@@ -138,7 +144,7 @@ public class Recipe implements Serializable {
     this.isVegetarian = isVegetarian;
   }
 
-  public Recipe numberOfServings(String numberOfServings) {
+  public Recipe numberOfServings(Integer numberOfServings) {
     this.numberOfServings = numberOfServings;
     return this;
   }
@@ -147,43 +153,42 @@ public class Recipe implements Serializable {
    * Get numberOfServings
    * @return numberOfServings
   */
-  @NotNull @Pattern(regexp = "^[0-9]*$") 
   @Schema(name = "numberOfServings", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("numberOfServings")
-  public String getNumberOfServings() {
+  public Integer getNumberOfServings() {
     return numberOfServings;
   }
 
-  public void setNumberOfServings(String numberOfServings) {
+  public void setNumberOfServings(Integer numberOfServings) {
     this.numberOfServings = numberOfServings;
   }
 
-  public Recipe ingredients(List<@Valid Ingredient> ingredients) {
-    this.ingredients = ingredients;
+  public Recipe ingredients(List<@Valid RecipeIngredient> ingredients) {
+    this.recipeIngredients = ingredients;
     return this;
   }
 
-  public Recipe addIngredientsItem(Ingredient ingredientsItem) {
-    if (this.ingredients == null) {
-      this.ingredients = new ArrayList<>();
+  public Recipe addIngredientsItem(RecipeIngredient ingredientsItem) {
+    if (this.recipeIngredients == null) {
+      this.recipeIngredients = new ArrayList<>();
     }
-    this.ingredients.add(ingredientsItem);
+    this.recipeIngredients.add(ingredientsItem);
     return this;
   }
 
   /**
-   * Get ingredients
-   * @return ingredients
+   * Get recipeIngredients
+   * @return recipeIngredients
   */
-  @NotNull @Valid @Size(min = 1, max = 100) 
+//  @NotNull @Valid @Size(min = 1, max = 100)
   @Schema(name = "ingredients", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("ingredients")
-  public List<@Valid Ingredient> getIngredients() {
-    return ingredients;
+  public List<@Valid RecipeIngredient> getRecipeIngredients() {
+    return recipeIngredients;
   }
 
-  public void setIngredients(List<@Valid Ingredient> ingredients) {
-    this.ingredients = ingredients;
+  public void setRecipeIngredients(List<@Valid RecipeIngredient> recipeIngredients) {
+    this.recipeIngredients = recipeIngredients;
   }
 
   @Override
@@ -200,12 +205,12 @@ public class Recipe implements Serializable {
         Objects.equals(this.instructions, recipe.instructions) &&
         Objects.equals(this.isVegetarian, recipe.isVegetarian) &&
         Objects.equals(this.numberOfServings, recipe.numberOfServings) &&
-        Objects.equals(this.ingredients, recipe.ingredients);
+        Objects.equals(this.recipeIngredients, recipe.recipeIngredients);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, instructions, isVegetarian, numberOfServings, ingredients);
+    return Objects.hash(id, name, instructions, isVegetarian, numberOfServings, recipeIngredients);
   }
 
   @Override
@@ -217,7 +222,7 @@ public class Recipe implements Serializable {
     sb.append("    instructions: ").append(toIndentedString(instructions)).append("\n");
     sb.append("    isVegetarian: ").append(toIndentedString(isVegetarian)).append("\n");
     sb.append("    numberOfServings: ").append(toIndentedString(numberOfServings)).append("\n");
-    sb.append("    ingredients: ").append(toIndentedString(ingredients)).append("\n");
+    sb.append("    ingredients: ").append(toIndentedString(recipeIngredients)).append("\n");
     sb.append("}");
     return sb.toString();
   }

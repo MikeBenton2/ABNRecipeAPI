@@ -12,38 +12,18 @@ paths:
       operationId: getRecipes
       tags:
         - recipe
-      parameters:
-        - in: query
-          name: page 
-          schema: 
-            type: integer
-          required: true
-        - in: query
-          name: per_page
-          schema: 
-            type: integer
-          required: true
-      requestBody:
-        description: Recipe field properties
-        required: false
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/RecipeProperties"
       responses:
         "200":
-          description: "A paged array of recipes"
+          description: "An array of recipes"
           content:
             "application/json":
               schema:
-                allOf:
-                  - $ref: "#/components/schemas/PaginatedResult"
-                  - type: object
-                    properties:
-                      results:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Recipe"
+                content:
+                  application/json:
+                    schema:
+                      type: array
+                      items:
+                        $ref: "#/components/schemas/RecipeDTO"
         "400":
           description: "Bad Request."
           content:
@@ -95,7 +75,7 @@ paths:
         content:
           "application/json":
             schema:
-              $ref: "#/components/schemas/Recipe"
+              $ref: "#/components/schemas/RecipeDTO"
       responses:
         "201":
           description: Recipe created successfully.
@@ -115,7 +95,7 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/Error"
-    patch:
+    put:
       summary: Update a recipe
       operationId: updateRecipe
       tags:
@@ -126,7 +106,7 @@ paths:
         content:
           "application/json":
             schema:
-              $ref: "#/components/schemas/UpdatedRecipe"
+              $ref: "#/components/schemas/RecipeDTO"
       responses:
         "201":
           description: Recipe updated successfully.
@@ -195,21 +175,44 @@ components:
   schemas:
     Recipe:
       type: object
-      allOf:
-        - $ref: '#/components/schemas/RecipeProperties'
+      x-class-extra-annotation: "@jakarta.persistence.Entity(name = \"Recipe\")"
       required:
-        - id
         - name
         - instructions
         - isVegetarian
         - numberOfServings
         - ingredients
-    UpdatedRecipe:
+      properties:
+        id:
+          type: string
+          x-field-extra-annotation: "@jakarta.persistence.Id @jakarta.persistence.GeneratedValue(strategy = GenerationType.UUID)"
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          minLength: 1
+        instructions:
+          type: string
+          minLength: 1
+        isVegetarian:
+          type: boolean
+        numberOfServings:
+          type: integer
+        recipeIngredients:
+          type: array
+          x-field-extra-annotation: "@jakarta.persistence.OneToMany(mappedBy = \"recipe\", cascade = CascadeType.ALL, orphanRemoval = true)"
+          minItems: 1
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/RecipeIngredient"
+    RecipeDTO:
       type: object
-      allOf:
-        - $ref: '#/components/schemas/RecipeProperties'
-    RecipeProperties:
-      type: object
+      required:
+        - name
+        - instructions
+        - isVegetarian
+        - numberOfServings
+        - ingredients
       properties:
         id:
           type: string
@@ -224,46 +227,47 @@ components:
         isVegetarian:
           type: boolean
         numberOfServings:
-          type: string
-          pattern: "^[0-9]*$"
+          type: integer
         ingredients:
           type: array
           minItems: 1
           maxItems: 100
           items:
-            $ref: "#/components/schemas/Ingredient"
+            $ref: "#/components/schemas/IngredientDTO"
     Ingredient:
-        type: object
-        required:
-            - name
-            - required
-            - included
-        properties:
-            id:
-              type: string
-              format: uuid
-              readOnly: true
-            name:
-              type: string
-              minLength: 1
-            required:
-              type: boolean
-            included:
-              type: boolean
-    PaginatedResult:
       type: object
+      x-class-extra-annotation: "@jakarta.persistence.Entity(name = \"Ingredient\")"
+      required:
+          - name
+          - recipeIngredients
       properties:
-        page:
-          type: integer
-          format: int32
-        per_page: 
-          type: integer
-          format: int32
-        has_next:
-          type: boolean
-        results: 
-          type: array
-          items: {}  #  any type of items
+          id:
+            type: string
+            x-field-extra-annotation: "@jakarta.persistence.Id @jakarta.persistence.GeneratedValue(strategy = GenerationType.UUID)"
+            format: uuid
+            readOnly: true
+          name:
+            type: string
+            minLength: 1
+          recipeIngredients:
+            type: array
+            minItems: 1
+            maxItems: 100
+            x-field-extra-annotation: "@jakarta.persistence.ManyToMany(mappedBy = \"ingredient\", cascade = CascadeType.ALL)"
+            items:
+              $ref: "#/components/schemas/RecipeIngredient"
+    IngredientDTO:
+      type: object
+      required:
+        - id
+        - name
+      id:
+        type: string
+        format: uuid
+        readOnly: true
+      name:
+        type: string
+        minLength: 1
     Error:
       type: object
       required:
@@ -275,3 +279,24 @@ components:
           format: int32
         message:
           type: string
+    RecipeIngredientId:
+      type: object
+      x-class-extra-annotation: "@jakarta.persistence.Embeddable"
+      properties:
+        recipeId:
+          type: string
+          format: uuid
+        ingredientId:
+          type: string
+          format: uuid
+    RecipeIngredient:
+      type: object
+      x-class-extra-annotation: "@jakarta.persistence.Entity(name = \"RecipeIngredient\")
+      @jakarta.persistence.Table(name = \"RecipeIngredient\")"
+      properties:
+        id:
+          $ref: "#/components/schemas/RecipeIngredientId"
+        recipe:
+          $ref: "#/components/schemas/Recipe"
+        ingredient:
+          $ref: "#/components/schemas/Ingredient"

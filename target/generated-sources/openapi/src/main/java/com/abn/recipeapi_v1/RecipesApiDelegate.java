@@ -1,29 +1,23 @@
 package com.abn.recipeapi_v1;
 
-import com.abn.recipeapi_v1.model.Error;
+import com.abn.recipeapi_v1.controllers.RecipesAPIController;
+import com.abn.recipeapi_v1.dto.RecipeDTO;
 import com.abn.recipeapi_v1.model.GetRecipes200Response;
 import com.abn.recipeapi_v1.model.Recipe;
-import com.abn.recipeapi_v1.model.RecipeProperties;
-import java.util.UUID;
 import com.abn.recipeapi_v1.model.UpdatedRecipe;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.validation.constraints.*;
-import jakarta.validation.Valid;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
 /**
- * A delegate to be called by the {@link RecipesApiController}}.
+ * A delegate to be called by the {@link RecipesAPIController}}.
  * Implement this interface with a {@link org.springframework.stereotype.Service} annotated class.
  */
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-03-20T12:28:10.528866+01:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-03-27T16:17:05.660628+01:00[Europe/Amsterdam]")
 public interface RecipesApiDelegate {
 
     default Optional<NativeWebRequest> getRequest() {
@@ -39,16 +33,16 @@ public interface RecipesApiDelegate {
      *         or Server error (status code 500)
      * @see RecipesApi#createRecipe
      */
-    default ResponseEntity<String> createRecipe(Recipe recipe) {
+    default ResponseEntity<String> createRecipe(RecipeDTO recipe) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : 1, \"message\" : \"message\" }";
+                    String exampleString = "{ \"code\" : 5, \"message\" : \"message\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : 1, \"message\" : \"message\" }";
+                    String exampleString = "{ \"code\" : 5, \"message\" : \"message\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -67,9 +61,17 @@ public interface RecipesApiDelegate {
      *         or Unauthorized (status code 401)
      * @see RecipesApi#deleteRecipe
      */
-    default ResponseEntity<String> deleteRecipe(UUID recipeId) {
+    default ResponseEntity deleteRecipe(Long recipeId) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"numberOfServings\" : \"numberOfServings\", \"instructions\" : \"instructions\", \"name\" : \"name\", \"isVegetarian\" : true, \"ingredients\" : [ { \"recipes\" : [ null, null ], \"name\" : \"name\", \"id\" : 5, \"included\" : true, \"required\" : true }, { \"recipes\" : [ null, null ], \"name\" : \"name\", \"id\" : 5, \"included\" : true, \"required\" : true }, { \"recipes\" : [ null, null ], \"name\" : \"name\", \"id\" : 5, \"included\" : true, \"required\" : true }, { \"recipes\" : [ null, null ], \"name\" : \"name\", \"id\" : 5, \"included\" : true, \"required\" : true }, { \"recipes\" : [ null, null ], \"name\" : \"name\", \"id\" : 5, \"included\" : true, \"required\" : true } ], \"id\" : 1 }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
     }
 
     /**
@@ -79,11 +81,11 @@ public interface RecipesApiDelegate {
      * @return Expected response to a valid request (status code 200)
      * @see RecipesApi#getRecipeById
      */
-    default ResponseEntity<Recipe> getRecipeById(UUID recipeId) {
+    default ResponseEntity<RecipeDTO> getRecipeById(Long recipeId) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"numberOfServings\" : \"numberOfServings\", \"instructions\" : \"instructions\", \"name\" : \"name\", \"isVegetarian\" : true, \"ingredients\" : [ { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"included\" : true, \"required\" : true }, { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"included\" : true, \"required\" : true }, { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"included\" : true, \"required\" : true }, { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"included\" : true, \"required\" : true }, { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"included\" : true, \"required\" : true } ], \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\" }";
+                    String exampleString = "{ \"numberOfServings\" : \"numberOfServings\", \"instructions\" : \"instructions\", \"name\" : \"name\", \"isVegetarian\" : true, \"ingredients\" : [ { \"recipes\" : [ null, null ], \"name\" : \"name\", \"id\" : 5, \"included\" : true, \"required\" : true }, { \"recipes\" : [ null, null ], \"name\" : \"name\", \"id\" : 5, \"included\" : true, \"required\" : true }, { \"recipes\" : [ null, null ], \"name\" : \"name\", \"id\" : 5, \"included\" : true, \"required\" : true }, { \"recipes\" : [ null, null ], \"name\" : \"name\", \"id\" : 5, \"included\" : true, \"required\" : true }, { \"recipes\" : [ null, null ], \"name\" : \"name\", \"id\" : 5, \"included\" : true, \"required\" : true } ], \"id\" : 1 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -106,27 +108,26 @@ public interface RecipesApiDelegate {
      * @see RecipesApi#getRecipes
      */
     default ResponseEntity<GetRecipes200Response> getRecipes(Integer page,
-        Integer perPage,
-        RecipeProperties recipeProperties) {
+        Integer perPage) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"per_page\" : 6, \"has_next\" : true, \"page\" : 0, \"results\" : [ { \"numberOfServings\" : \"numberOfServings\", \"instructions\" : \"instructions\", \"name\" : \"name\", \"isVegetarian\" : true, \"ingredients\" : [ { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"included\" : true, \"required\" : true }, { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"included\" : true, \"required\" : true }, { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"included\" : true, \"required\" : true }, { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"included\" : true, \"required\" : true }, { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"included\" : true, \"required\" : true } ], \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\" }, { \"numberOfServings\" : \"numberOfServings\", \"instructions\" : \"instructions\", \"name\" : \"name\", \"isVegetarian\" : true, \"ingredients\" : [ { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"included\" : true, \"required\" : true }, { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"included\" : true, \"required\" : true }, { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"included\" : true, \"required\" : true }, { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"included\" : true, \"required\" : true }, { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"included\" : true, \"required\" : true } ], \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\" } ] }";
+                    String exampleString = "{ \"per_page\" : 6, \"has_next\" : true, \"page\" : 0, \"results\" : [ { \"numberOfServings\" : \"numberOfServings\", \"instructions\" : \"instructions\", \"name\" : \"name\", \"isVegetarian\" : true, \"ingredients\" : [ { \"recipes\" : [ null, null ], \"name\" : \"name\", \"id\" : 5, \"included\" : true, \"required\" : true }, { \"recipes\" : [ null, null ], \"name\" : \"name\", \"id\" : 5, \"included\" : true, \"required\" : true }, { \"recipes\" : [ null, null ], \"name\" : \"name\", \"id\" : 5, \"included\" : true, \"required\" : true }, { \"recipes\" : [ null, null ], \"name\" : \"name\", \"id\" : 5, \"included\" : true, \"required\" : true }, { \"recipes\" : [ null, null ], \"name\" : \"name\", \"id\" : 5, \"included\" : true, \"required\" : true } ], \"id\" : 1 }, { \"numberOfServings\" : \"numberOfServings\", \"instructions\" : \"instructions\", \"name\" : \"name\", \"isVegetarian\" : true, \"ingredients\" : [ { \"recipes\" : [ null, null ], \"name\" : \"name\", \"id\" : 5, \"included\" : true, \"required\" : true }, { \"recipes\" : [ null, null ], \"name\" : \"name\", \"id\" : 5, \"included\" : true, \"required\" : true }, { \"recipes\" : [ null, null ], \"name\" : \"name\", \"id\" : 5, \"included\" : true, \"required\" : true }, { \"recipes\" : [ null, null ], \"name\" : \"name\", \"id\" : 5, \"included\" : true, \"required\" : true }, { \"recipes\" : [ null, null ], \"name\" : \"name\", \"id\" : 5, \"included\" : true, \"required\" : true } ], \"id\" : 1 } ] }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : 1, \"message\" : \"message\" }";
+                    String exampleString = "{ \"code\" : 5, \"message\" : \"message\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : 1, \"message\" : \"message\" }";
+                    String exampleString = "{ \"code\" : 5, \"message\" : \"message\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : 1, \"message\" : \"message\" }";
+                    String exampleString = "{ \"code\" : 5, \"message\" : \"message\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -145,16 +146,16 @@ public interface RecipesApiDelegate {
      *         or Server error (status code 500)
      * @see RecipesApi#updateRecipe
      */
-    default ResponseEntity<String> updateRecipe(UpdatedRecipe updatedRecipe) {
+    default ResponseEntity<String> updateRecipe(RecipeDTO updatedRecipe) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : 1, \"message\" : \"message\" }";
+                    String exampleString = "{ \"code\" : 5, \"message\" : \"message\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : 1, \"message\" : \"message\" }";
+                    String exampleString = "{ \"code\" : 5, \"message\" : \"message\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

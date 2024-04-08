@@ -4,6 +4,7 @@ import com.abn.recipeapi_v1.model.GetRecipes200Response;
 import com.abn.recipeapi_v1.model.Ingredient;
 import com.abn.recipeapi_v1.model.Recipe;
 import com.abn.recipeapi_v1.model.RecipeProperties;
+import com.abn.recipeapi_v1.services.RecipeDAOService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,7 @@ import java.util.Objects;
 
 class RecipeDAOServiceTests {
 
-    RecipeDAOService service = new RecipeDAOService();
+    RecipeDAOService service = new RecipeDAOService(null);
 
     @Test
     void getAllRecipes() {

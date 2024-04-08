@@ -5,11 +5,10 @@
  */
 package com.abn.recipeapi_v1;
 
+import com.abn.recipeapi_v1.dto.RecipeDTO;
 import com.abn.recipeapi_v1.model.Error;
 import com.abn.recipeapi_v1.model.GetRecipes200Response;
 import com.abn.recipeapi_v1.model.Recipe;
-import com.abn.recipeapi_v1.model.RecipeProperties;
-import java.util.UUID;
 import com.abn.recipeapi_v1.model.UpdatedRecipe;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-03-20T12:28:10.528866+01:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-03-27T16:17:05.660628+01:00[Europe/Amsterdam]")
 @Validated
 @Tag(name = "recipe", description = "the recipe API")
 public interface RecipesApi {
@@ -74,7 +73,7 @@ public interface RecipesApi {
     )
     
     default ResponseEntity<String> createRecipe(
-        @Parameter(name = "Recipe", description = "Create Recipe payload", required = true) @Valid @RequestBody Recipe recipe
+        @Parameter(name = "Recipe", description = "Create Recipe payload", required = true) @Valid @RequestBody RecipeDTO recipe
     ) {
         return getDelegate().createRecipe(recipe);
     }
@@ -106,8 +105,8 @@ public interface RecipesApi {
         produces = { "application/json" }
     )
     
-    default ResponseEntity<String> deleteRecipe(
-        @Parameter(name = "recipeId", description = "The id of the recipe to retrieve", required = true, in = ParameterIn.PATH) @PathVariable("recipeId") UUID recipeId
+    default ResponseEntity deleteRecipe(
+        @Parameter(name = "recipeId", description = "The id of the recipe to retrieve", required = true, in = ParameterIn.PATH) @PathVariable("recipeId") Long recipeId
     ) {
         return getDelegate().deleteRecipe(recipeId);
     }
@@ -135,8 +134,8 @@ public interface RecipesApi {
         produces = { "application/json" }
     )
     
-    default ResponseEntity<Recipe> getRecipeById(
-        @Parameter(name = "recipeId", description = "The id of the recipe to retrieve", required = true, in = ParameterIn.PATH) @PathVariable("recipeId") UUID recipeId
+    default ResponseEntity<RecipeDTO> getRecipeById(
+        @Parameter(name = "recipeId", description = "The id of the recipe to retrieve", required = true, in = ParameterIn.PATH) @PathVariable("recipeId") Long recipeId
     ) {
         return getDelegate().getRecipeById(recipeId);
     }
@@ -147,7 +146,6 @@ public interface RecipesApi {
      *
      * @param page  (required)
      * @param perPage  (required)
-     * @param recipeProperties Recipe field properties (optional)
      * @return A paged array of recipes (status code 200)
      *         or Bad Request. (status code 400)
      *         or No recipes found. (status code 404)
@@ -181,10 +179,9 @@ public interface RecipesApi {
     
     default ResponseEntity<GetRecipes200Response> getRecipes(
         @NotNull @Parameter(name = "page", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "page", required = true) Integer page,
-        @NotNull @Parameter(name = "per_page", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "per_page", required = true) Integer perPage,
-        @Parameter(name = "RecipeProperties", description = "Recipe field properties") @Valid @RequestBody(required = false) RecipeProperties recipeProperties
+        @NotNull @Parameter(name = "per_page", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "per_page", required = true) Integer perPage
     ) {
-        return getDelegate().getRecipes(page, perPage, recipeProperties);
+        return getDelegate().getRecipes(page, perPage);
     }
 
 
@@ -213,14 +210,14 @@ public interface RecipesApi {
         }
     )
     @RequestMapping(
-        method = RequestMethod.PATCH,
+        method = RequestMethod.PUT,
         value = "/recipes",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-    
+
     default ResponseEntity<String> updateRecipe(
-        @Parameter(name = "UpdatedRecipe", description = "Updated Recipe payload", required = true) @Valid @RequestBody UpdatedRecipe updatedRecipe
+        @Parameter(name = "UpdatedRecipe", description = "Updated Recipe payload", required = true) @Valid @RequestBody RecipeDTO updatedRecipe
     ) {
         return getDelegate().updateRecipe(updatedRecipe);
     }

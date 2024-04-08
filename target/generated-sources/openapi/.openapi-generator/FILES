@@ -6,5 +6,7 @@ src/main/java/com/abn/recipeapi_v1/model/GetRecipes200Response.java
 src/main/java/com/abn/recipeapi_v1/model/Ingredient.java
 src/main/java/com/abn/recipeapi_v1/model/PaginatedResult.java
 src/main/java/com/abn/recipeapi_v1/model/Recipe.java
+src/main/java/com/abn/recipeapi_v1/model/RecipeIngredient.java
+src/main/java/com/abn/recipeapi_v1/model/RecipeIngredientId.java
 src/main/java/com/abn/recipeapi_v1/model/RecipeProperties.java
 src/main/java/com/abn/recipeapi_v1/model/UpdatedRecipe.java
