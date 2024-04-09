@@ -5,11 +5,9 @@
  */
 package com.abn.recipeapi_v1;
 
-import com.abn.recipeapi_v1.dto.RecipeDTO;
 import com.abn.recipeapi_v1.model.Error;
-import com.abn.recipeapi_v1.model.GetRecipes200Response;
-import com.abn.recipeapi_v1.model.Recipe;
-import com.abn.recipeapi_v1.model.UpdatedRecipe;
+import com.abn.recipeapi_v1.model.RecipeDTO;
+import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-03-27T16:17:05.660628+01:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-04-09T11:23:04.561667+02:00[Europe/Amsterdam]")
 @Validated
 @Tag(name = "recipe", description = "the recipe API")
 public interface RecipesApi {
@@ -44,7 +42,7 @@ public interface RecipesApi {
     /**
      * POST /recipes : Create a recipe
      *
-     * @param recipe Create Recipe payload (required)
+     * @param recipeDTO Create Recipe payload (required)
      * @return Recipe created successfully. (status code 201)
      *         or Bad Request. (status code 400)
      *         or Server error (status code 500)
@@ -73,9 +71,9 @@ public interface RecipesApi {
     )
     
     default ResponseEntity<String> createRecipe(
-        @Parameter(name = "Recipe", description = "Create Recipe payload", required = true) @Valid @RequestBody RecipeDTO recipe
+        @Parameter(name = "RecipeDTO", description = "Create Recipe payload", required = true) @Valid @RequestBody RecipeDTO recipeDTO
     ) {
-        return getDelegate().createRecipe(recipe);
+        return getDelegate().createRecipe(recipeDTO);
     }
 
 
@@ -105,8 +103,8 @@ public interface RecipesApi {
         produces = { "application/json" }
     )
     
-    default ResponseEntity deleteRecipe(
-        @Parameter(name = "recipeId", description = "The id of the recipe to retrieve", required = true, in = ParameterIn.PATH) @PathVariable("recipeId") Long recipeId
+    default ResponseEntity<String> deleteRecipe(
+        @Parameter(name = "recipeId", description = "The id of the recipe to retrieve", required = true, in = ParameterIn.PATH) @PathVariable("recipeId") UUID recipeId
     ) {
         return getDelegate().deleteRecipe(recipeId);
     }
@@ -124,7 +122,7 @@ public interface RecipesApi {
         tags = { "recipe" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Expected response to a valid request", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Recipe.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = RecipeDTO.class))
             })
         }
     )
@@ -135,7 +133,7 @@ public interface RecipesApi {
     )
     
     default ResponseEntity<RecipeDTO> getRecipeById(
-        @Parameter(name = "recipeId", description = "The id of the recipe to retrieve", required = true, in = ParameterIn.PATH) @PathVariable("recipeId") Long recipeId
+        @Parameter(name = "recipeId", description = "The id of the recipe to retrieve", required = true, in = ParameterIn.PATH) @PathVariable("recipeId") UUID recipeId
     ) {
         return getDelegate().getRecipeById(recipeId);
     }
@@ -144,9 +142,7 @@ public interface RecipesApi {
     /**
      * GET /recipes : Get all recipes
      *
-     * @param page  (required)
-     * @param perPage  (required)
-     * @return A paged array of recipes (status code 200)
+     * @return An array of recipes (status code 200)
      *         or Bad Request. (status code 400)
      *         or No recipes found. (status code 404)
      *         or Server error (status code 500)
@@ -156,8 +152,8 @@ public interface RecipesApi {
         summary = "Get all recipes",
         tags = { "recipe" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "A paged array of recipes", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = GetRecipes200Response.class))
+            @ApiResponse(responseCode = "200", description = "An array of recipes", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RecipeDTO.class)))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request.", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
@@ -173,22 +169,20 @@ public interface RecipesApi {
     @RequestMapping(
         method = RequestMethod.GET,
         value = "/recipes",
-        produces = { "application/json" },
-        consumes = { "application/json" }
+        produces = { "application/json" }
     )
     
-    default ResponseEntity<GetRecipes200Response> getRecipes(
-        @NotNull @Parameter(name = "page", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "page", required = true) Integer page,
-        @NotNull @Parameter(name = "per_page", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "per_page", required = true) Integer perPage
+    default ResponseEntity<List<RecipeDTO>> getRecipes(
+        
     ) {
-        return getDelegate().getRecipes(page, perPage);
+        return getDelegate().getRecipes();
     }
 
 
     /**
-     * PATCH /recipes : Update a recipe
+     * PUT /recipes : Update a recipe
      *
-     * @param updatedRecipe Updated Recipe payload (required)
+     * @param recipeDTO Updated Recipe payload (required)
      * @return Recipe updated successfully. (status code 201)
      *         or Bad Request. (status code 400)
      *         or Server error (status code 500)
@@ -215,11 +209,11 @@ public interface RecipesApi {
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-
+    
     default ResponseEntity<String> updateRecipe(
-        @Parameter(name = "UpdatedRecipe", description = "Updated Recipe payload", required = true) @Valid @RequestBody RecipeDTO updatedRecipe
+        @Parameter(name = "RecipeDTO", description = "Updated Recipe payload", required = true) @Valid @RequestBody RecipeDTO recipeDTO
     ) {
-        return getDelegate().updateRecipe(updatedRecipe);
+        return getDelegate().updateRecipe(recipeDTO);
     }
 
 }

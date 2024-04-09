@@ -4,26 +4,18 @@
     "instructions": "vegetarian recipe instructions",
     "isVegetarian": true,
     "numberOfServings": "4",
-    "recipeIngredients": [
+    "ingredients": [
       {
-        "ingredient": {
-          "name": "Garlic"
-        }
+        "name": "Garlic"
       },
       {
-        "ingredient": {
-          "name": "Chickpeas"
-        }
+        "name": "Chickpeas"
       },
       {
-        "ingredient": {
-          "name": "Curry Powder"
-        }
+        "name": "Curry Powder"
       },
       {
-        "ingredient": {
-          "name": "Red Onions"
-        }
+        "name": "Red Onions"
       }
     ]
   },
@@ -32,36 +24,24 @@
     "instructions": "Lasagna recipe instructions",
     "isVegetarian": false,
     "numberOfServings": "6",
-    "recipeIngredients": [
+    "ingredients": [
       {
-        "ingredient": {
-          "name": "Onions"
-        }
+        "name": "Onions"
       },
       {
-        "ingredient": {
-          "name": "Garlic"
-        }
+        "name": "Garlic"
       },
       {
-        "ingredient": {
-          "name": "Beef"
-        }
+        "name": "Beef"
       },
       {
-        "ingredient": {
-          "name": "Pasta Sauce"
-        }
+        "name": "Pasta Sauce"
       },
       {
-        "ingredient": {
-          "name": "Cheese"
-        }
+        "name": "Cheese"
       },
       {
-        "ingredient": {
-          "name": "Lasagna Noodles"
-        }
+        "name": "Lasagna Noodles"
       }
     ]
   },
@@ -70,36 +50,24 @@
     "instructions": "Pizza recipe instructions",
     "isVegetarian": true,
     "numberOfServings": "2",
-    "recipeIngredients": [
+    "ingredients": [
       {
-        "ingredient": {
-          "name": "Onions"
-        }
+        "name": "Onions"
       },
       {
-        "ingredient": {
-          "name": "Garlic"
-        }
+        "name": "Garlic"
       },
       {
-        "ingredient": {
-          "name": "Peppers"
-        }
+        "name": "Peppers"
       },
       {
-        "ingredient": {
-          "name": "Pineapple"
-        }
+        "name": "Pineapple"
       },
       {
-        "ingredient": {
-          "name": "Cheese"
-        }
+        "name": "Cheese"
       },
       {
-        "ingredient": {
-          "name": "Pizza sauce"
-        }
+        "name": "Pizza sauce"
       }
     ]
   },
@@ -108,35 +76,24 @@
     "instructions": "Burgers recipe instructions",
     "isVegetarian": false,
     "numberOfServings": "1",
-    "recipeIngredients": [
+    "ingredients": [
       {
-        "ingredient": {
-          "name": "Onions"
-        }
+        "name": "Onions"
       },
       {
-        "ingredient": {
-          "name": "Garlic"
-        }
+        "name": "Garlic"
       },
       {
-        "ingredient": {
-          "name": "Beef Patty"
-        }
+        "name": "Beef Patty"
       },
-      {"ingredient": {
+      {
         "name": "Buns"
-      }
       },
       {
-        "ingredient": {
-          "name": "Cheese"
-        }
+        "name": "Cheese"
       },
       {
-        "ingredient": {
-          "name": "Ketchup"
-        }
+        "name": "Ketchup"
       }
     ]
   }

@@ -1,6 +1,5 @@
 package com.abn.recipeapi_v1;
 
-import com.abn.recipeapi_v1.model.GetRecipes200Response;
 import com.abn.recipeapi_v1.services.RecipeDAOService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,49 +27,49 @@ class RecipeApiV1ApplicationHttpRequestTests {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
-    void getRecipesTest_succeed() throws Exception {
-
-        ResponseEntity<GetRecipes200Response> entity = new ResponseEntity<>(HttpStatus.OK);
-
-        when(service.getRecipes(0,0, null)).thenReturn(entity);
-
-        LinkedMultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        parameters.add("page", "0");
-        parameters.add("per_page", "10");
-
-        this.mockMvc.perform(get("/recipes").contentType(MediaType.APPLICATION_JSON).queryParams(parameters))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void getRecipesTest_missing_page_parameter_fail() throws Exception {
-
-        ResponseEntity<GetRecipes200Response> entity = new ResponseEntity<>(HttpStatus.OK);
-
-        when(service.getRecipes(0,0, null)).thenReturn(entity);
-
-        LinkedMultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        parameters.add("per_page", "10");
-
-        this.mockMvc.perform(get("/recipes").contentType(MediaType.APPLICATION_JSON).queryParams(parameters))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void getRecipesTest_missing_perPage_parameter_fail() throws Exception {
-
-        ResponseEntity<GetRecipes200Response> entity = new ResponseEntity<>(HttpStatus.OK);
-
-        when(service.getRecipes(0,0, null)).thenReturn(entity);
-
-        LinkedMultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        parameters.add("page", "0");
-
-        this.mockMvc.perform(get("/recipes").contentType(MediaType.APPLICATION_JSON).queryParams(parameters))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
-    }
+//    @Test
+//    void getRecipesTest_succeed() throws Exception {
+//
+//        ResponseEntity<GetRecipes200Response> entity = new ResponseEntity<>(HttpStatus.OK);
+//
+//        when(service.getRecipes(0,0, null)).thenReturn(entity);
+//
+//        LinkedMultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+//        parameters.add("page", "0");
+//        parameters.add("per_page", "10");
+//
+//        this.mockMvc.perform(get("/recipes").contentType(MediaType.APPLICATION_JSON).queryParams(parameters))
+//                .andDo(print())
+//                .andExpect(status().isOk());
+//    }
+//
+//    @Test
+//    void getRecipesTest_missing_page_parameter_fail() throws Exception {
+//
+//        ResponseEntity<GetRecipes200Response> entity = new ResponseEntity<>(HttpStatus.OK);
+//
+//        when(service.getRecipes(0,0, null)).thenReturn(entity);
+//
+//        LinkedMultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+//        parameters.add("per_page", "10");
+//
+//        this.mockMvc.perform(get("/recipes").contentType(MediaType.APPLICATION_JSON).queryParams(parameters))
+//                .andDo(print())
+//                .andExpect(status().isBadRequest());
+//    }
+//
+//    @Test
+//    void getRecipesTest_missing_perPage_parameter_fail() throws Exception {
+//
+//        ResponseEntity<GetRecipes200Response> entity = new ResponseEntity<>(HttpStatus.OK);
+//
+//        when(service.getRecipes(0,0, null)).thenReturn(entity);
+//
+//        LinkedMultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+//        parameters.add("page", "0");
+//
+//        this.mockMvc.perform(get("/recipes").contentType(MediaType.APPLICATION_JSON).queryParams(parameters))
+//                .andDo(print())
+//                .andExpect(status().isBadRequest());
+//    }
 }

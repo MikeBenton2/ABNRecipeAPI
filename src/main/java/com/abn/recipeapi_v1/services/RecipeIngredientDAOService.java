@@ -1,11 +1,9 @@
 package com.abn.recipeapi_v1.services;
 
-import com.abn.recipeapi_v1.dto.IngredientDTO;
-import com.abn.recipeapi_v1.dto.RecipeDTO;
-import com.abn.recipeapi_v1.exception.ValueAlreadyExistsException;
 import com.abn.recipeapi_v1.exception.ValueDoesNotExistException;
 import com.abn.recipeapi_v1.model.Ingredient;
 import com.abn.recipeapi_v1.model.Recipe;
+import com.abn.recipeapi_v1.model.RecipeDTO;
 import com.abn.recipeapi_v1.model.RecipeIngredient;
 import com.abn.recipeapi_v1.repositories.IngredientRepository;
 import com.abn.recipeapi_v1.repositories.RecipeIngredientRepository;
@@ -15,16 +13,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.UUID;
 
 import static com.abn.recipeapi_v1.exception.ExceptionConstants.*;
 
 @Service
 public class RecipeIngredientDAOService {
 
-    private RecipeIngredientRepository recipeIngredientRepository;
-    private RecipeRepository recipeRepository;
-    private IngredientRepository ingredientRepository;
+    private final RecipeIngredientRepository recipeIngredientRepository;
+    private final RecipeRepository recipeRepository;
+    private final IngredientRepository ingredientRepository;
 
     @Autowired
     public RecipeIngredientDAOService(
@@ -70,7 +68,7 @@ public class RecipeIngredientDAOService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public ResponseEntity<String> removeIngredientFromRecipe(Long recipeId, Long ingredientId) {
+    public ResponseEntity<String> removeIngredientFromRecipe(UUID recipeId, UUID ingredientId) {
         final RecipeIngredient recipeIngredient = recipeIngredientRepository.findByRecipeIdAndIngredientId(recipeId, ingredientId)
                 .orElseThrow(
                     () -> new ValueDoesNotExistException(RECIPE_INGREDIENT_DOES_NOT_EXIST));

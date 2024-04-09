@@ -1,9 +1,9 @@
 package com.abn.recipeapi_v1.services;
 
-import com.abn.recipeapi_v1.dto.IngredientDTO;
 import com.abn.recipeapi_v1.exception.ValueAlreadyExistsException;
 import com.abn.recipeapi_v1.exception.ValueDoesNotExistException;
 import com.abn.recipeapi_v1.model.Ingredient;
+import com.abn.recipeapi_v1.model.IngredientDTO;
 import com.abn.recipeapi_v1.repositories.IngredientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.abn.recipeapi_v1.exception.ExceptionConstants.*;
 
@@ -27,23 +28,32 @@ public class IngredientDAOService {
         this.ingredientRepository = ingredientRepository;
     }
 
-    public ResponseEntity<IngredientDTO> getIngredientByID(Long id) {
-        IngredientDTO ingredientDTO = ingredientRepository.findById(id).map(IngredientDTO::new).orElseThrow(
-                //            log.error(DOES_NOT_EXIST_INGREDIENT);
+    public ResponseEntity<List<IngredientDTO>>  getAllIngredients() {
+       List <IngredientDTO> ingredients = ingredientRepository.findAll().stream().map(ingredient ->
+           new IngredientDTO(
+                   ingredient.getId(),
+                   ingredient.getName()
+           )).toList();
+
+        if (CollectionUtils.isEmpty(ingredients)) {
+            //            log.error(NO_INGREDIENTS_FOUND);
+            throw new ValueDoesNotExistException(NO_INGREDIENTS_FOUND);
+        }
+
+        return new ResponseEntity<>(ingredients, HttpStatus.OK);
+    }
+
+    public ResponseEntity<IngredientDTO> getIngredientByID(UUID id) {
+        IngredientDTO ingredientDTO = ingredientRepository.findById(id).map(ingredient ->
+                new IngredientDTO(
+                        ingredient.getId(),
+                        ingredient.getName()
+                )).orElseThrow(
+                //            log.error(INGREDIENT_DOES_NOT_EXIST);
                 () -> new ValueDoesNotExistException(INGREDIENT_DOES_NOT_EXIST)
         );
 
         return new ResponseEntity<>(ingredientDTO, HttpStatus.OK);
-    }
-
-    public ResponseEntity<List<IngredientDTO>>  getAllIngredients() {
-       List <IngredientDTO> ingredients = ingredientRepository.findAll().stream().map(IngredientDTO::new).toList();
-        if (CollectionUtils.isEmpty(ingredients)) {
-            //            log.error(NO_RECIPES_FOUND);
-            throw new ValueDoesNotExistException(NO_RECIPES_FOUND);
-        }
-
-        return new ResponseEntity<>(ingredients, HttpStatus.OK);
     }
 
     public ResponseEntity<String> createIngredient(String name) {
@@ -51,7 +61,7 @@ public class IngredientDAOService {
 //            log.error(ALREADY_EXISTS_INGREDIENT);
             throw new ValueAlreadyExistsException(INGREDIENT_ALREADY_EXISTS);
         }
-        Ingredient ingredient = ingredientRepository.save(new Ingredient(name));
+        ingredientRepository.save(new Ingredient(name));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -67,7 +77,7 @@ public class IngredientDAOService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public ResponseEntity<String> deleteById(Long id) {
+    public ResponseEntity<String> deleteById(UUID id) {
         final Optional<Ingredient> ingredient = ingredientRepository.findById(id);
 
         if(ingredient.isPresent()) {

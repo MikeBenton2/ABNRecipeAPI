@@ -7,7 +7,6 @@ import com.abn.recipeapi_v1.model.Recipe;
 import com.abn.recipeapi_v1.model.RecipeIngredientId;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import jakarta.persistence.*;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
@@ -23,30 +22,36 @@ import jakarta.annotation.Generated;
  * RecipeIngredient
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-03-27T16:17:05.660628+01:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-04-09T11:23:04.561667+02:00[Europe/Amsterdam]")
 @jakarta.persistence.Entity(name = "RecipeIngredient") @jakarta.persistence.Table(name = "RecipeIngredient")
 public class RecipeIngredient implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  @EmbeddedId
-  public RecipeIngredientId recipeIngredientId = new RecipeIngredientId();
+  @jakarta.persistence.EmbeddedId
+  private RecipeIngredientId id = new RecipeIngredientId();
 
-  @ManyToOne()
-  @MapsId("recipeId")
-  @JoinColumn(name = "recipeId", referencedColumnName = "id")
-  public Recipe recipe;
+  @jakarta.persistence.ManyToOne @jakarta.persistence.MapsId("recipeId") @jakarta.persistence.JoinColumn(name = "recipeId", referencedColumnName = "id")
+  private Recipe recipe;
 
-  @ManyToOne()
-  @MapsId("ingredientId")
-  @JoinColumn(name = "ingredientId", referencedColumnName = "id")
-  public Ingredient ingredient;
+  @jakarta.persistence.ManyToOne @jakarta.persistence.MapsId("ingredientId") @jakarta.persistence.JoinColumn(name = "ingredientId", referencedColumnName = "id")
+  private Ingredient ingredient;
 
-  public RecipeIngredient() {}
+  public RecipeIngredient() {
+    super();
+  }
 
-  public RecipeIngredient (Recipe recipe, Ingredient ingredient) {
+  /**
+   * Constructor with only required parameters
+   */
+  public RecipeIngredient(Recipe recipe, Ingredient ingredient) {
     this.recipe = recipe;
     this.ingredient = ingredient;
+  }
+
+  public RecipeIngredient id(RecipeIngredientId id) {
+    this.id = id;
+    return this;
   }
 
   /**
@@ -57,11 +62,11 @@ public class RecipeIngredient implements Serializable {
   @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public RecipeIngredientId getId() {
-    return recipeIngredientId;
+    return id;
   }
 
   public void setId(RecipeIngredientId id) {
-    this.recipeIngredientId = id;
+    this.id = id;
   }
 
   public RecipeIngredient recipe(Recipe recipe) {
@@ -73,8 +78,8 @@ public class RecipeIngredient implements Serializable {
    * Get recipe
    * @return recipe
   */
-  @Valid 
-  @Schema(name = "recipe", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull @Valid 
+  @Schema(name = "recipe", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("recipe")
   public Recipe getRecipe() {
     return recipe;
@@ -93,8 +98,8 @@ public class RecipeIngredient implements Serializable {
    * Get ingredient
    * @return ingredient
   */
-  @Valid 
-  @Schema(name = "ingredient", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull @Valid 
+  @Schema(name = "ingredient", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("ingredient")
   public Ingredient getIngredient() {
     return ingredient;
@@ -106,22 +111,28 @@ public class RecipeIngredient implements Serializable {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    RecipeIngredient that = (RecipeIngredient) o;
-    return recipeIngredientId.equals(that.recipeIngredientId);
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    RecipeIngredient recipeIngredient = (RecipeIngredient) o;
+    return Objects.equals(this.id, recipeIngredient.id) &&
+        Objects.equals(this.recipe, recipeIngredient.recipe) &&
+        Objects.equals(this.ingredient, recipeIngredient.ingredient);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(recipeIngredientId);
+    return Objects.hash(id, recipe, ingredient);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class RecipeIngredient {\n");
-    sb.append("    id: ").append(toIndentedString(recipeIngredientId)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    recipe: ").append(toIndentedString(recipe)).append("\n");
     sb.append("    ingredient: ").append(toIndentedString(ingredient)).append("\n");
     sb.append("}");

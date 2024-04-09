@@ -5,9 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface RecipeIngredientRepository extends JpaRepository<RecipeIngredient, Long> {
-    Optional<RecipeIngredient> findByRecipeIdAndIngredientId(Long recipeId, Long ingredientId);
-    boolean existsByRecipeIdAndIngredientId(Long recipeId, Long ingredientId);
+public interface RecipeIngredientRepository extends JpaRepository<RecipeIngredient, UUID> {
+    Optional<RecipeIngredient> findByRecipeIdAndIngredientId(UUID recipeId, UUID ingredientId);
+    boolean existsByRecipeIdAndIngredientId(UUID recipeId, UUID ingredientId);
 }

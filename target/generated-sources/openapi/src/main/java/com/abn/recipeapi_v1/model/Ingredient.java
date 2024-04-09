@@ -2,15 +2,15 @@ package com.abn.recipeapi_v1.model;
 
 import java.net.URI;
 import java.util.Objects;
-import com.abn.recipeapi_v1.model.Recipe;
-import com.fasterxml.jackson.annotation.*;
-
+import com.abn.recipeapi_v1.model.RecipeIngredient;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.OneToMany;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
@@ -22,25 +22,24 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.*;
 import jakarta.annotation.Generated;
 
-import static jakarta.persistence.GenerationType.SEQUENCE;
-
 /**
  * Ingredient
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-03-27T16:17:05.660628+01:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-04-09T11:23:04.561667+02:00[Europe/Amsterdam]")
 @jakarta.persistence.Entity(name = "Ingredient")
 public class Ingredient implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  @jakarta.persistence.Id @jakarta.persistence.SequenceGenerator ( name = "ingredient_sequence", sequenceName = "ingredient_sequence") @jakarta.persistence.GeneratedValue ( strategy = SEQUENCE, generator = "ingredient_sequence" )
-  private Long id;
+  @jakarta.persistence.Id @jakarta.persistence.GeneratedValue
+  private UUID id;
 
   private String name;
 
-  @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL)
-  public Set<RecipeIngredient> recipeIngredients = new HashSet<>();
+  @jakarta.persistence.OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL)
+  @Valid
+  private List<@Valid RecipeIngredient> recipeIngredients;
 
   public Ingredient() {
     super();
@@ -53,7 +52,7 @@ public class Ingredient implements Serializable {
     this.name = name;
   }
 
-  public Ingredient id(Long id) {
+  public Ingredient id(UUID id) {
     this.id = id;
     return this;
   }
@@ -62,14 +61,14 @@ public class Ingredient implements Serializable {
    * Get id
    * @return id
   */
-  
+  @Valid 
   @Schema(name = "id", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
-  public Long getId() {
+  public UUID getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(UUID id) {
     this.id = id;
   }
 
@@ -93,19 +92,32 @@ public class Ingredient implements Serializable {
     this.name = name;
   }
 
+  public Ingredient recipeIngredients(List<@Valid RecipeIngredient> recipeIngredients) {
+    this.recipeIngredients = recipeIngredients;
+    return this;
+  }
+
+  public Ingredient addRecipeIngredientsItem(RecipeIngredient recipeIngredientsItem) {
+    if (this.recipeIngredients == null) {
+      this.recipeIngredients = new ArrayList<>();
+    }
+    this.recipeIngredients.add(recipeIngredientsItem);
+    return this;
+  }
+
   /**
-   * Get recipes
-   * @return recipes
+   * Get recipeIngredients
+   * @return recipeIngredients
   */
   @Valid 
-  @Schema(name = "recipes", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("recipes")
-  public Set<@Valid RecipeIngredient> getRecipes() {
+  @Schema(name = "recipeIngredients", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("recipeIngredients")
+  public List<@Valid RecipeIngredient> getRecipeIngredients() {
     return recipeIngredients;
   }
 
-  public void setRecipes(Set<@Valid RecipeIngredient> recipes) {
-    this.recipeIngredients = recipes;
+  public void setRecipeIngredients(List<@Valid RecipeIngredient> recipeIngredients) {
+    this.recipeIngredients = recipeIngredients;
   }
 
   @Override
@@ -133,7 +145,7 @@ public class Ingredient implements Serializable {
     sb.append("class Ingredient {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    recipes: ").append(toIndentedString(recipeIngredients)).append("\n");
+    sb.append("    recipeIngredients: ").append(toIndentedString(recipeIngredients)).append("\n");
     sb.append("}");
     return sb.toString();
   }

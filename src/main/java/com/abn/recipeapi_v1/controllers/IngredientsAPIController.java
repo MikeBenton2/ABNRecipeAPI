@@ -1,48 +1,58 @@
 package com.abn.recipeapi_v1.controllers;
 
-import com.abn.recipeapi_v1.dto.IngredientDTO;
-import com.abn.recipeapi_v1.dto.RecipeDTO;
-import com.abn.recipeapi_v1.model.Ingredient;
-import com.abn.recipeapi_v1.model.Recipe;
+import com.abn.recipeapi_v1.IngredientsApi;
+import com.abn.recipeapi_v1.IngredientsApiDelegate;
+import com.abn.recipeapi_v1.model.IngredientDTO;
 import com.abn.recipeapi_v1.services.IngredientDAOService;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Controller
-public class IngredientsAPIController {
+@RequestMapping("${openapi.ingredient.base-path:}")
+public class IngredientsAPIController implements IngredientsApi {
 
+    private final IngredientsApiDelegate delegate;
     private final IngredientDAOService service;
-
-    public IngredientsAPIController(IngredientDAOService ingredientService) {
-        this.service = ingredientService;
+    public IngredientsAPIController(
+            @Autowired(required = false) IngredientsApiDelegate delegate,
+            IngredientDAOService service
+    ) {
+        this.delegate = Optional.ofNullable(delegate).orElse(new IngredientsApiDelegate() {});
+        this.service = service;
     }
 
-    @GetMapping("/ingredients/{id}")
-    public ResponseEntity<IngredientDTO> findById(@PathVariable long id) {
-        return service.getIngredientByID(id);
+    public IngredientsApiDelegate getDelegate() {
+        return delegate;
     }
 
-    @GetMapping("/ingredients")
-    public ResponseEntity<List<IngredientDTO>> findAllIngredients() {
+    @Override
+    public ResponseEntity<List<IngredientDTO>> getIngredients() {
         return service.getAllIngredients();
     }
 
-    @PostMapping("/ingredients")
-    public ResponseEntity<String> createIngredient(@RequestBody IngredientDTO ingredientDTO) {
+    @Override
+    public ResponseEntity<IngredientDTO> getIngredientById(UUID id) {
+        return service.getIngredientByID(id);
+    }
+
+    @Override
+    public ResponseEntity<String> createIngredient(IngredientDTO ingredientDTO) {
         return service.createIngredient(ingredientDTO.getName());
     }
 
-    @PutMapping("/ingredients")
-    public ResponseEntity<String> updateIngredient(@RequestBody IngredientDTO ingredientDTO) {
+    @Override
+    public ResponseEntity<String> updateIngredient(IngredientDTO ingredientDTO) {
         return service.update(ingredientDTO);
     }
 
-    @DeleteMapping("/ingredients/{id}")
-    public ResponseEntity<String> deleteIngredient(@PathVariable long id) {
+    @Override
+    public ResponseEntity<String> deleteIngredient(UUID id) {
         return service.deleteById(id);
     }
 }

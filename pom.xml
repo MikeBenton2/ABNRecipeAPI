@@ -108,10 +108,6 @@
                                 <useJakartaEe>true</useJakartaEe>
                                 <serializableModel>true</serializableModel>
                             </configOptions>
-                            <typeMappings>
-                                <!-- convert Double to BigDecimal -->
-                                <typeMapping>CascadeType=jakarta.persistence.CascadeType</typeMapping>
-                            </typeMappings>
                         </configuration>
                     </execution>
                 </executions>

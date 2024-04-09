@@ -6,6 +6,7 @@ public class ExceptionConstants {
 
     public static String INGREDIENT_ALREADY_EXISTS = "Ingredient already exists";
     public static String INGREDIENT_DOES_NOT_EXIST = "Ingredient does not exist";
+    public static String NO_INGREDIENTS_FOUND = "No ingredients found";
     public static String RECIPE_DOES_NOT_EXIST = "Recipe does not exist.";
     public static String RECIPE_NOT_FOUND = "Recipe not found.";
     public static String NO_RECIPE_ID_PROVIDED = "Please provide the Recipe ID when adding ingredients";

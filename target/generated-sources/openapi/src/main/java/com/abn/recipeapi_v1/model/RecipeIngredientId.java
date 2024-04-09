@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import java.util.UUID;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
@@ -19,17 +20,17 @@ import jakarta.annotation.Generated;
  * RecipeIngredientId
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-03-27T16:17:05.660628+01:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-04-09T11:23:04.561667+02:00[Europe/Amsterdam]")
 @jakarta.persistence.Embeddable
 public class RecipeIngredientId implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  public Long recipeId;
+  private UUID recipeId;
 
-  public Long ingredientId;
+  private UUID ingredientId;
 
-  public RecipeIngredientId recipeId(Long recipeId) {
+  public RecipeIngredientId recipeId(UUID recipeId) {
     this.recipeId = recipeId;
     return this;
   }
@@ -38,18 +39,18 @@ public class RecipeIngredientId implements Serializable {
    * Get recipeId
    * @return recipeId
   */
-  
+  @Valid 
   @Schema(name = "recipeId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("recipeId")
-  public Long getRecipeId() {
+  public UUID getRecipeId() {
     return recipeId;
   }
 
-  public void setRecipeId(Long recipeId) {
+  public void setRecipeId(UUID recipeId) {
     this.recipeId = recipeId;
   }
 
-  public RecipeIngredientId ingredientId(Long ingredientId) {
+  public RecipeIngredientId ingredientId(UUID ingredientId) {
     this.ingredientId = ingredientId;
     return this;
   }
@@ -58,14 +59,14 @@ public class RecipeIngredientId implements Serializable {
    * Get ingredientId
    * @return ingredientId
   */
-  
+  @Valid 
   @Schema(name = "ingredientId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("ingredientId")
-  public Long getIngredientId() {
+  public UUID getIngredientId() {
     return ingredientId;
   }
 
-  public void setIngredientId(Long ingredientId) {
+  public void setIngredientId(UUID ingredientId) {
     this.ingredientId = ingredientId;
   }
 

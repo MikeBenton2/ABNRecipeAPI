@@ -12,38 +12,15 @@ paths:
       operationId: getRecipes
       tags:
         - recipe
-      parameters:
-        - in: query
-          name: page 
-          schema: 
-            type: integer
-          required: true
-        - in: query
-          name: per_page
-          schema: 
-            type: integer
-          required: true
-      requestBody:
-        description: Recipe field properties
-        required: false
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/RecipeProperties"
       responses:
         "200":
-          description: "A paged array of recipes"
+          description: "An array of recipes"
           content:
             "application/json":
               schema:
-                allOf:
-                  - $ref: "#/components/schemas/Recipe"
-                  - type: object
-                    properties:
-                      results:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Recipe"
+                type: array
+                items:
+                  $ref: "#/components/schemas/RecipeDTO"
         "400":
           description: "Bad Request."
           content:
@@ -95,7 +72,7 @@ paths:
         content:
           "application/json":
             schema:
-              $ref: "#/components/schemas/Recipe"
+              $ref: "#/components/schemas/RecipeDTO"
       responses:
         "201":
           description: Recipe created successfully.
@@ -126,7 +103,7 @@ paths:
         content:
           "application/json":
             schema:
-              $ref: "#/components/schemas/Recipe"
+              $ref: "#/components/schemas/RecipeDTO"
       responses:
         "201":
           description: Recipe updated successfully.
@@ -158,15 +135,15 @@ paths:
           required: true
           description: The id of the recipe to retrieve
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: Expected response to a valid request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Recipe"
+                $ref: "#/components/schemas/RecipeDTO"
     delete:
       summary: Delete recipe by id
       operationId: deleteRecipe
@@ -178,8 +155,8 @@ paths:
           required: true
           description: The id of the recipe to retrieve
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         "200":
           description: Recipe deleted successfully.
@@ -189,6 +166,232 @@ paths:
                 type: string
         "404":
           description: Recipe ID not found
+        "401":
+          description: Unauthorized
+  /ingredients:
+    get:
+      summary: Retrieve all ingredients
+      operationId: getIngredients
+      tags:
+        - ingredient
+      responses:
+        "200":
+          description: "An array of ingredients"
+          content:
+            "application/json":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/IngredientDTO"
+        "400":
+          description: "Bad Request."
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                {
+                  "errors":
+                    [
+                      {
+                        "code": "invalid_parameters",
+                        "message": "The parameters sent are invalid.",
+                        "status": "404"
+                      }
+                    ]
+                }
+        "404":
+          description: "No ingredients found."
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                {
+                  "errors":
+                    [
+                      {
+                        "code": "empty_ingredient_repository",
+                        "message": "Their are no ingredients saved.",
+                        "status": "404"
+                      }
+                    ]
+                }
+        "500":
+          description: "Server error"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: Create a ingredient
+      operationId: createIngredient
+      tags:
+        - ingredient
+      requestBody:
+        description: "Create Ingredient"
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/IngredientDTO"
+      responses:
+        "201":
+          description: Ingredient created successfully.
+          content:
+            "application/json":
+              schema:
+                type: string
+        "400":
+          description: "Bad Request."
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Server error"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      summary: Update a ingredient
+      operationId: updateIngredient
+      tags:
+        - recipe
+      requestBody:
+        description: "Updated Ingredient"
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/IngredientDTO"
+      responses:
+        "201":
+          description: Ingredient updated successfully.
+          content:
+            "application/json":
+              schema:
+                type: string
+        "400":
+          description: "Bad Request."
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Server error"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Error"
+  /ingredients/{id}:
+    get:
+      summary: Info for a specific ingredient
+      operationId: getIngredientById
+      tags:
+        - ingredient
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the ingredient to retrieve
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IngredientDTO"
+    delete:
+      summary: Delete ingredient by id
+      operationId: deleteIngredient
+      tags:
+        - ingredient
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the Ingredient to delete
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Ingredient deleted successfully.
+          content:
+            "application/json":
+              schema:
+                type: string
+        "404":
+          description: Ingredient ID not found
+        "401":
+          description: Unauthorized
+  /recipeIngredients:
+    post:
+      summary: Add a ingredient to a recipe
+      operationId: addIngredientToRecipe
+      tags:
+        - recipeIngredient
+      requestBody:
+        description: "Add Ingredient to Recipe"
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/RecipeDTO"
+      responses:
+        "201":
+          description: Ingredient added successfully.
+          content:
+            "application/json":
+              schema:
+                type: string
+        "400":
+          description: "Bad Request."
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Server error"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Error"
+  /recipeIngredients/{recipeId}/ingredients/{ingredientId}:
+    delete:
+      summary: Delete ingredient from a recipe
+      operationId: deleteRecipeIngredient
+      tags:
+        - recipeIngredient
+      parameters:
+        - name: recipeId
+          in: path
+          required: true
+          description: The id of the recipe
+          schema:
+            type: string
+            format: uuid
+        - name: ingredientId
+          in: path
+          required: true
+          description: The id of the ingredient
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Ingredient deleted successfully.
+          content:
+            "application/json":
+              schema:
+                type: string
+        "404":
+          description: Ingredient or recipe not found
         "401":
           description: Unauthorized
 components:
@@ -204,20 +407,9 @@ components:
         - ingredients
       properties:
         id:
-          type: integer
-          x-field-extra-annotation: "@jakarta.persistence.Id 
-          @jakarta.persistence.SequenceGenerator
-            (
-              name = \"recipe_sequence\", 
-              sequenceName = \"recipe_sequence\"
-            )
-          @jakarta.persistence.GeneratedValue
-            (
-              strategy = SEQUENCE,
-              generator = \"recipe_sequence\"
-            )
-          "
-          format: int64
+          type: string
+          x-field-extra-annotation: "@jakarta.persistence.Id @jakarta.persistence.GeneratedValue"
+          format: uuid
           readOnly: true
         name:
           type: string
@@ -231,47 +423,70 @@ components:
           type: integer
         recipeIngredients:
           type: array
-          x-field-extra-annotation: "@jakarta.persistence.OneToMany(cascade = CascadeType.ALL, mappedBy: )"
+          x-field-extra-annotation: "@jakarta.persistence.OneToMany(mappedBy = \"recipe\", cascade = CascadeType.ALL, orphanRemoval = true)"
+          items:
+            $ref: "#/components/schemas/RecipeIngredient"
+    RecipeDTO:
+      type: object
+      required:
+        - name
+        - instructions
+        - isVegetarian
+        - numberOfServings
+        - ingredients
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          minLength: 1
+        instructions:
+          type: string
+          minLength: 1
+        isVegetarian:
+          type: boolean
+        numberOfServings:
+          type: integer
+        ingredients:
+          type: array
           minItems: 1
           maxItems: 100
           items:
-            $ref: "#/components/schemas/Ingredient"
+            $ref: "#/components/schemas/IngredientDTO"
     Ingredient:
-        type: object
-        x-class-extra-annotation: "@jakarta.persistence.Entity(name = \"Ingredient\")"
-        required:
-            - name
-            - required
-            - included
-        properties:
-            id:
-              type: integer
-              x-field-extra-annotation: "@jakarta.persistence.Id
-              @jakarta.persistence.SequenceGenerator
-                (
-                  name = \"ingredient_sequence\", 
-                  sequenceName = \"ingredient_sequence\"
-                )
-              @jakarta.persistence.GeneratedValue
-                (
-                  strategy = SEQUENCE,
-                  generator = \"ingredient_sequence\"
-                )
-              "
-              format: int64
-              readOnly: true
-            name:
-              type: string
-              minLength: 1
-            required:
-              type: boolean
-            included:
-              type: boolean
-            recipes:
-              type: array
-              x-field-extra-annotation: "@jakarta.persistence.ManyToMany(mappedBy = \"ingredients\", cascade = CascadeType.ALL)"
-              items:
-                $ref: "#/components/schemas/Recipe"
+      type: object
+      x-class-extra-annotation: "@jakarta.persistence.Entity(name = \"Ingredient\")"
+      required:
+          - name
+      properties:
+          id:
+            type: string
+            x-field-extra-annotation: "@jakarta.persistence.Id @jakarta.persistence.GeneratedValue"
+            format: uuid
+            readOnly: true
+          name:
+            type: string
+            minLength: 1
+          recipeIngredients:
+            type: array
+            x-field-extra-annotation: "@jakarta.persistence.OneToMany(mappedBy = \"ingredient\", cascade = CascadeType.ALL)"
+            items:
+              $ref: "#/components/schemas/RecipeIngredient"
+    IngredientDTO:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          minLength: 1
     Error:
       type: object
       required:
@@ -288,19 +503,32 @@ components:
       x-class-extra-annotation: "@jakarta.persistence.Embeddable"
       properties:
         recipeId:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
         ingredientId:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
     RecipeIngredient:
       type: object
+      required:
+        - recipe
+        - ingredient
       x-class-extra-annotation: "@jakarta.persistence.Entity(name = \"RecipeIngredient\")
       @jakarta.persistence.Table(name = \"RecipeIngredient\")"
       properties:
         id:
-          $ref: "#/components/schemas/RecipeIngredientId"
+          x-field-extra-annotation: "@jakarta.persistence.EmbeddedId"
+          allOf:
+            - $ref: "#/components/schemas/RecipeIngredientId"
         recipe:
-          $ref: "#/components/schemas/Recipe"
+          x-field-extra-annotation: "@jakarta.persistence.ManyToOne
+          @jakarta.persistence.MapsId(\"recipeId\")
+          @jakarta.persistence.JoinColumn(name = \"recipeId\", referencedColumnName = \"id\")"
+          allOf:
+            - $ref: "#/components/schemas/Recipe"
         ingredient:
-          $ref: "#/components/schemas/Ingredient"
+          x-field-extra-annotation: "@jakarta.persistence.ManyToOne
+          @jakarta.persistence.MapsId(\"ingredientId\")
+          @jakarta.persistence.JoinColumn(name = \"ingredientId\", referencedColumnName = \"id\")"
+          allOf:
+             - $ref: "#/components/schemas/Ingredient"
