@@ -1,98 +1,146 @@
 package com.abn.recipeapi_v1;
 
 
-import com.abn.recipeapi_v1.model.Ingredient;
-import com.abn.recipeapi_v1.model.Recipe;
-
+import com.abn.recipeapi_v1.filterAndSearch.Filter;
+import com.abn.recipeapi_v1.filterAndSearch.SearchRequest;
+import com.abn.recipeapi_v1.model.RecipeDTO;
 import com.abn.recipeapi_v1.services.RecipeDAOService;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = RecipeApiV1Application.class)
+@Transactional
 class RecipeDAOServiceTests {
 
-//    RecipeDAOService service = new RecipeDAOService(null);
+    @Autowired
+    private RecipeDAOService service;
 
-//    @Test
-//    void getAllRecipes() {
-//        ResponseEntity<GetRecipes200Response> entity = service.getRecipes(0,10, null);
-//        List<Recipe> recipes = Objects.requireNonNull(entity.getBody()).getResults();
-//
-//        Assertions.assertEquals(4, recipes.size());
-//    }
-//
-//    @Test
-//    void getRecipeByID() {
-//        ResponseEntity<GetRecipes200Response> entity = service.getRecipes(0,10, null);
-//        List<Recipe> recipes = Objects.requireNonNull(entity.getBody()).getResults();
-//
-//        Recipe recipe = recipes.getFirst();
-//
-//        ResponseEntity<Recipe> recipeEntity = service.getRecipeById(recipe.getId());
-//        Assertions.assertEquals(recipeEntity.getBody(), recipe);
-//    }
-//
-//    @Test
-//    void getRecipeByName() {
-//        RecipeProperties properties = new RecipeProperties();
-//        String expectedRecipeName = "Pizza";
-//        properties.setName(expectedRecipeName);
-//
-//        ResponseEntity<GetRecipes200Response> entity = service.getRecipes(0,10, properties);
-//        List<Recipe> recipes = Objects.requireNonNull(entity.getBody()).getResults();
-//
-//        Assertions.assertEquals(1, recipes.size());
-//        Recipe recipe = recipes.getFirst();
-//
-//        Assertions.assertEquals(expectedRecipeName, recipe.getName());
-//    }
-//
-//    @Test
-//    void getRecipeByInstructions() {
-//        RecipeProperties properties = new RecipeProperties();
-//        String expectedRecipeInstructions = "Lasagna recipe instructions";
-//        properties.setInstructions(expectedRecipeInstructions);
-//
-//        ResponseEntity<GetRecipes200Response> entity = service.getRecipes(0,10, properties);
-//        List<Recipe> recipes = Objects.requireNonNull(entity.getBody()).getResults();
-//
-//        Assertions.assertEquals(1, recipes.size());
-//        Recipe recipe = recipes.getFirst();
-//
-//        Assertions.assertEquals(expectedRecipeInstructions, recipe.getInstructions());
-//    }
-//
-//    @Test
-//    void getRecipesByIsVegetarian() {
-//        RecipeProperties properties = new RecipeProperties();
-//        boolean expectedBoolean = true;
-//        properties.setIsVegetarian(expectedBoolean);
-//
-//        ResponseEntity<GetRecipes200Response> entity = service.getRecipes(0,10, properties);
-//        List<Recipe> recipes = Objects.requireNonNull(entity.getBody()).getResults();
-//
-//        for (Recipe recipe : recipes) {
-//            Assertions.assertEquals(expectedBoolean, recipe.getIsVegetarian());
-//        }
-//    }
-//
-//    @Test
-//    void getRecipesByNumberOfServings() {
-//        RecipeProperties properties = new RecipeProperties();
-//        String expectedNumberOfServings = "2";
-//        properties.setNumberOfServings(expectedNumberOfServings);
-//
-//        ResponseEntity<GetRecipes200Response> entity = service.getRecipes(0,10, properties);
-//        List<Recipe> recipes = Objects.requireNonNull(entity.getBody()).getResults();
-//
-//        for (Recipe recipe : recipes) {
-//            Assertions.assertEquals(expectedNumberOfServings, recipe.getNumberOfServings());
-//        }
-//    }
-//
+    @Test
+    void getAllRecipesNoSearchRequest() {
+        SearchRequest searchRequest = new SearchRequest(null, null, null, null);
+        ResponseEntity<List<RecipeDTO>> entity = service.findAllRecipes(searchRequest);
+        List<RecipeDTO> recipes = Objects.requireNonNull(entity.getBody());
+
+        Assertions.assertEquals(4, recipes.size());
+    }
+
+    @Test
+    void getAllRecipesWithPageAndNumberOfElements() {
+        SearchRequest searchRequest = new SearchRequest(null, 0, 2, null);
+
+        ResponseEntity<List<RecipeDTO>> entity = service.findAllRecipes(searchRequest);
+
+        List<RecipeDTO> recipes = Objects.requireNonNull(entity.getBody());
+        Assertions.assertEquals(2, recipes.size());
+    }
+
+    @Test
+    void getAllRecipesWithSortAndOrderByNameAscending() {
+        SearchRequest searchRequest = new SearchRequest(null, null, null, "name");
+
+        ResponseEntity<List<RecipeDTO>> entity = service.findAllRecipes(searchRequest);
+
+        List<RecipeDTO> recipes = Objects.requireNonNull(entity.getBody());
+        Assertions.assertEquals(4, recipes.size());
+        Assertions.assertEquals("Burgers", recipes.getFirst().getName());
+        Assertions.assertEquals("Pizza", recipes.getLast().getName());
+    }
+
+    @Test
+    void getRecipeByID() {
+        SearchRequest searchRequest = new SearchRequest(null, null, null, null);
+        RecipeDTO recipe = Objects.requireNonNull(service.findAllRecipes(searchRequest).getBody()).getFirst();
+        ResponseEntity<RecipeDTO> entityRecipe = service.findRecipeById(recipe.getId());
+        RecipeDTO foundRecipe = Objects.requireNonNull(entityRecipe.getBody());
+
+        Assertions.assertEquals(recipe, foundRecipe);
+    }
+
+    @Test
+    void getRecipeByName() {
+        List<Filter> filters = new ArrayList<>();
+        String recipeName = "Chickpea Curry";
+        filters.add(new Filter("name", ":", recipeName));
+
+        SearchRequest searchRequest = new SearchRequest(filters, null, null, null);
+
+        ResponseEntity<List<RecipeDTO>> entity = service.findAllRecipes(searchRequest);
+
+        List<RecipeDTO> recipes = Objects.requireNonNull(entity.getBody());
+        Assertions.assertEquals(1, recipes.size());
+        Assertions.assertEquals(recipeName, recipes.getFirst().getName());
+    }
+
+    @Test
+    void getRecipeByInstructions() {
+        List<Filter> filters = new ArrayList<>();
+        String recipeInstructions = "vegetarian recipe instructions";
+        filters.add(new Filter("instructions", ":", recipeInstructions));
+
+        SearchRequest searchRequest = new SearchRequest(filters, null, null, null);
+
+        ResponseEntity<List<RecipeDTO>> entity = service.findAllRecipes(searchRequest);
+
+        List<RecipeDTO> recipes = Objects.requireNonNull(entity.getBody());
+        Assertions.assertEquals(1, recipes.size());
+        Assertions.assertEquals(recipeInstructions, recipes.getFirst().getInstructions());
+    }
+
+    @Test
+    void getRecipesByIsVegetarian() {
+        List<Filter> filters = new ArrayList<>();
+        filters.add(new Filter("isVegetarian", ":", true));
+
+        SearchRequest searchRequest = new SearchRequest(filters, null, null, null);
+
+        ResponseEntity<List<RecipeDTO>> entity = service.findAllRecipes(searchRequest);
+
+        List<RecipeDTO> recipes = Objects.requireNonNull(entity.getBody());
+        Assertions.assertEquals(2, recipes.size());
+
+        for (RecipeDTO recipeDTO : recipes) {
+            Assertions.assertEquals(true, recipeDTO.getIsVegetarian());
+        }
+    }
+
+    @Test
+    void getRecipesByNumberOfServings() {
+        List<Filter> filters = new ArrayList<>();
+        filters.add(new Filter("numberOfServings", ":", 2));
+
+        SearchRequest searchRequest = new SearchRequest(filters, null, null, null);
+
+        ResponseEntity<List<RecipeDTO>> entity = service.findAllRecipes(searchRequest);
+
+        List<RecipeDTO> recipes = Objects.requireNonNull(entity.getBody());
+        Assertions.assertEquals(1, recipes.size());
+    }
+
+    @Test
+    void getRecipesByMultipleFilters() {
+        List<Filter> filters = new ArrayList<>();
+        filters.add(new Filter("isVegetarian", ":", false));
+        filters.add(new Filter("numberOfServings", ":", 2));
+
+        SearchRequest searchRequest = new SearchRequest(filters, null, null, null);
+
+        ResponseEntity<List<RecipeDTO>> entity = service.findAllRecipes(searchRequest);
+
+        List<RecipeDTO> recipes = Objects.requireNonNull(entity.getBody());
+        Assertions.assertEquals(1, recipes.size());
+    }
+
 //    @Test
 //    void getRecipesByIncludedIngredients() {
 //        RecipeProperties properties = new RecipeProperties();

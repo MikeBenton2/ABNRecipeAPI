@@ -21,8 +21,8 @@ import static com.abn.recipeapi_v1.exception.ExceptionConstants.*;
 
 @Service
 public class IngredientDAOService {
+    private static final Logger logger = LoggerFactory.getLogger(IngredientDAOService.class);
     private final IngredientRepository ingredientRepository;
-    static Logger logger = LoggerFactory.getLogger(IngredientDAOService.class);
     @Autowired
     public IngredientDAOService(
             IngredientRepository ingredientRepository

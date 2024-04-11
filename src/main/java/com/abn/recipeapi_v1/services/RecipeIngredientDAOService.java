@@ -21,11 +21,10 @@ import static com.abn.recipeapi_v1.exception.ExceptionConstants.*;
 
 @Service
 public class RecipeIngredientDAOService {
-
+    private static final Logger logger = LoggerFactory.getLogger(IngredientDAOService.class);
     private final RecipeIngredientRepository recipeIngredientRepository;
     private final RecipeRepository recipeRepository;
     private final IngredientRepository ingredientRepository;
-    static Logger logger = LoggerFactory.getLogger(IngredientDAOService.class);
 
     @Autowired
     public RecipeIngredientDAOService(

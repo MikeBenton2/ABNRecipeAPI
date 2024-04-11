@@ -30,7 +30,7 @@ import static com.abn.recipeapi_v1.exception.ExceptionConstants.*;
 
 @Service
 public class RecipeDAOService implements RecipesApiDelegate {
-    static Logger logger = LoggerFactory.getLogger(RecipeDAOService.class);
+    private static final Logger logger = LoggerFactory.getLogger(RecipeDAOService.class);
     private List<RecipeDTO> staticRecipes = new ArrayList<>();
     private final RecipeRepository recipeRepository;
     private final IngredientRepository ingredientRepository;
@@ -46,12 +46,18 @@ public class RecipeDAOService implements RecipesApiDelegate {
         saveRecipesToDatabase(staticRecipes);
     }
 
+    public List<RecipeDTO> getStaticRecipes() {
+        return staticRecipes;
+    }
+
     //<editor-fold desc="HTTP Methods">
     public ResponseEntity<List<RecipeDTO>> findAllRecipes(SearchRequest searchRequest) {
 
         List<RecipeDTO> foundRecipes = new ArrayList<>();
         RecipeSpecification recipeSpecification = new RecipeSpecification(searchRequest);
         Pageable pageRequest = RecipeSpecification.getSortingOrder(searchRequest);
+
+        List<Recipe> recipeList = recipeRepository.findAll();
 
         recipeRepository.findAll(recipeSpecification, pageRequest).forEach(recipe -> {
             RecipeDTO recipeDTO = new RecipeDTO(
