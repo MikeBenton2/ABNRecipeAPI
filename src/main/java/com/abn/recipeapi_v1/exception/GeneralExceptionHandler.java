@@ -12,7 +12,6 @@ public class GeneralExceptionHandler {
 
     @ExceptionHandler(value = APIRequestException.class)
     public ResponseEntity<Object> handleAPIRequestException(APIRequestException e) {
-        //        log.error(BAD_REQUEST, e);
         APIException apiException = new APIException(
                 e.getMessage(),
                 HttpStatus.BAD_REQUEST,
@@ -24,7 +23,6 @@ public class GeneralExceptionHandler {
 
     @ExceptionHandler(value = ValueAlreadyExistsException.class)
     public ResponseEntity<Object> handleValueAlreadyExistsException(ValueAlreadyExistsException e) {
-//        log.error(ALREADY_EXISTS, e);
         APIException apiException = new APIException(
                 e.getMessage(),
                 HttpStatus.CONFLICT,
@@ -36,7 +34,6 @@ public class GeneralExceptionHandler {
 
     @ExceptionHandler(value = ValueDoesNotExistException.class)
     public ResponseEntity<Object> handleValueDoesNotExistException(ValueDoesNotExistException e) {
-//        log.error(Does not exist, e);
         APIException apiException = new APIException(
                 e.getMessage(),
                 HttpStatus.NOT_FOUND,

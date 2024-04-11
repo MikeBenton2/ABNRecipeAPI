@@ -1,4 +1,4 @@
-package com.abn.recipeapi_v1;
+package com.abn.recipeapi_v1.filterAndSearch;
 
 public class Filter {
     private String key;

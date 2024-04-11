@@ -5,6 +5,8 @@ import com.abn.recipeapi_v1.exception.ValueDoesNotExistException;
 import com.abn.recipeapi_v1.model.Ingredient;
 import com.abn.recipeapi_v1.model.IngredientDTO;
 import com.abn.recipeapi_v1.repositories.IngredientRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +22,7 @@ import static com.abn.recipeapi_v1.exception.ExceptionConstants.*;
 @Service
 public class IngredientDAOService {
     private final IngredientRepository ingredientRepository;
-
+    static Logger logger = LoggerFactory.getLogger(IngredientDAOService.class);
     @Autowired
     public IngredientDAOService(
             IngredientRepository ingredientRepository
@@ -36,7 +38,7 @@ public class IngredientDAOService {
            )).toList();
 
         if (CollectionUtils.isEmpty(ingredients)) {
-            //            log.error(NO_INGREDIENTS_FOUND);
+            logger.info(NO_INGREDIENTS_FOUND);
             throw new ValueDoesNotExistException(NO_INGREDIENTS_FOUND);
         }
 
@@ -48,17 +50,17 @@ public class IngredientDAOService {
                 new IngredientDTO(
                         ingredient.getId(),
                         ingredient.getName()
-                )).orElseThrow(
-                //            log.error(INGREDIENT_DOES_NOT_EXIST);
-                () -> new ValueDoesNotExistException(INGREDIENT_DOES_NOT_EXIST)
-        );
+                )).orElseThrow(() -> {
+            logger.info(INGREDIENT_DOES_NOT_EXIST);
+            return new ValueDoesNotExistException(INGREDIENT_DOES_NOT_EXIST);
+        });
 
         return new ResponseEntity<>(ingredientDTO, HttpStatus.OK);
     }
 
     public ResponseEntity<String> createIngredient(String name) {
         if (ingredientRepository.existsByNameIgnoreCase(name)) {
-//            log.error(ALREADY_EXISTS_INGREDIENT);
+            logger.info(INGREDIENT_ALREADY_EXISTS);
             throw new ValueAlreadyExistsException(INGREDIENT_ALREADY_EXISTS);
         }
         ingredientRepository.save(new Ingredient(name));
@@ -67,13 +69,13 @@ public class IngredientDAOService {
 
     public ResponseEntity<String> update(IngredientDTO ingredientDTO) {
         Ingredient ingredient = ingredientRepository.findById(ingredientDTO.getId())
-                .orElseThrow(
-                        //            log.error(DOES_NOT_EXIST_INGREDIENT);
-                        () -> new ValueDoesNotExistException(INGREDIENT_DOES_NOT_EXIST)
-                );
+                .orElseThrow(() -> {
+                    logger.info(INGREDIENT_DOES_NOT_EXIST);
+                    return new ValueDoesNotExistException(INGREDIENT_DOES_NOT_EXIST);
+                });
 
         ingredient.setName(ingredientDTO.getName());
-        ingredient = ingredientRepository.save(ingredient);
+        ingredientRepository.save(ingredient);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -84,6 +86,7 @@ public class IngredientDAOService {
             ingredientRepository.delete(ingredient.get());
             return new ResponseEntity<>(HttpStatus.GONE);
         } else {
+            logger.info(INGREDIENT_DOES_NOT_EXIST);
             throw new ValueDoesNotExistException(INGREDIENT_DOES_NOT_EXIST);
         }
     }

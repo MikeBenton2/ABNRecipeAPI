@@ -1,18 +1,14 @@
 package com.abn.recipeapi_v1;
 
-import com.abn.recipeapi_v1.model.Error;
+import com.abn.recipeapi_v1.filterAndSearch.SearchRequest;
 import com.abn.recipeapi_v1.model.RecipeDTO;
 import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.validation.constraints.*;
-import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
@@ -99,7 +95,7 @@ public interface RecipesApiDelegate {
      *         or Server error (status code 500)
      * @see RecipesApi#getRecipes
      */
-    default ResponseEntity<List<RecipeDTO>> getRecipes() {
+    default ResponseEntity<List<RecipeDTO>> getRecipes(SearchRequest searchRequest) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {

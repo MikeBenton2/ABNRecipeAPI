@@ -2,12 +2,13 @@ package com.abn.recipeapi_v1.controllers;
 
 import com.abn.recipeapi_v1.RecipesApi;
 import com.abn.recipeapi_v1.RecipesApiDelegate;
-import com.abn.recipeapi_v1.model.*;
+import com.abn.recipeapi_v1.filterAndSearch.SearchRequest;
+import com.abn.recipeapi_v1.model.RecipeDTO;
 import com.abn.recipeapi_v1.services.RecipeDAOService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,8 +34,8 @@ public class RecipesAPIController implements RecipesApi {
     }
 
     @Override
-    public ResponseEntity<List<RecipeDTO>> getRecipes() {
-        return service.findAllRecipes();
+    public ResponseEntity<List<RecipeDTO>> getRecipes(SearchRequest searchRequest) {
+        return service.findAllRecipes(searchRequest);
     }
 
     @Override

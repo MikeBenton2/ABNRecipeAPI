@@ -1,16 +1,14 @@
-package com.abn.recipeapi_v1;
+package com.abn.recipeapi_v1.filterAndSearch;
 
-import com.abn.recipeapi_v1.model.Ingredient;
 import com.abn.recipeapi_v1.model.Recipe;
-import com.abn.recipeapi_v1.model.RecipeIngredient;
-import jakarta.persistence.criteria.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class RecipeSpecification implements Specification<Recipe> {
 
@@ -35,7 +33,7 @@ public class RecipeSpecification implements Specification<Recipe> {
 //        }
         Predicate predicate = null;
 
-        for (Filter filter : criteria.getFilters()) {
+        for (Filter filter : criteria.filters()) {
             if (filter.getOperation().equalsIgnoreCase(":")) {
                 if (root.get(filter.getKey()).getJavaType() == String.class) {
                     predicate = criteriaBuilder.and(criteriaBuilder.like(criteriaBuilder.lower(
@@ -52,16 +50,16 @@ public class RecipeSpecification implements Specification<Recipe> {
     public static Pageable getSortingOrder(SearchRequest searchRequest) {
         Pageable pageRequest = PageRequest.of(0,10);
 
-        if(searchRequest.getPage() != null && searchRequest.getNumberOfElements() != null) {
-            if(searchRequest.getSortBy() != null) {
-                if(searchRequest.getOrderBy() != null) {
-                    switch (searchRequest.getOrderBy()) {
-                        case ASCENDING -> pageRequest = PageRequest.of(searchRequest.getPage(), searchRequest.getNumberOfElements(), Sort.by(searchRequest.getSortBy()).ascending());
-                        case DESCENDING -> pageRequest = PageRequest.of(searchRequest.getPage(), searchRequest.getNumberOfElements(), Sort.by(searchRequest.getSortBy()).descending());
+        if(searchRequest.page() != null && searchRequest.numberOfElements() != null) {
+            if(searchRequest.sortBy() != null) {
+                if(searchRequest.orderBy() != null) {
+                    switch (searchRequest.orderBy()) {
+                        case ASCENDING -> pageRequest = PageRequest.of(searchRequest.page(), searchRequest.numberOfElements(), Sort.by(searchRequest.sortBy()).ascending());
+                        case DESCENDING -> pageRequest = PageRequest.of(searchRequest.page(), searchRequest.numberOfElements(), Sort.by(searchRequest.sortBy()).descending());
                     }
                 }
             } else {
-                pageRequest = PageRequest.of(searchRequest.getPage(), searchRequest.getNumberOfElements(), Sort.by(searchRequest.getSortBy()));
+                pageRequest = PageRequest.of(searchRequest.page(), searchRequest.numberOfElements(), Sort.by(searchRequest.sortBy()));
             }
         }
 

@@ -8,6 +8,8 @@ import com.abn.recipeapi_v1.model.RecipeIngredient;
 import com.abn.recipeapi_v1.repositories.IngredientRepository;
 import com.abn.recipeapi_v1.repositories.RecipeIngredientRepository;
 import com.abn.recipeapi_v1.repositories.RecipeRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ public class RecipeIngredientDAOService {
     private final RecipeIngredientRepository recipeIngredientRepository;
     private final RecipeRepository recipeRepository;
     private final IngredientRepository ingredientRepository;
+    static Logger logger = LoggerFactory.getLogger(IngredientDAOService.class);
 
     @Autowired
     public RecipeIngredientDAOService(
@@ -49,9 +52,10 @@ public class RecipeIngredientDAOService {
                     Ingredient ingredient;
 
                     if (ingredientDTO.getId() != null) {
-                        ingredient = ingredientRepository.findById(ingredientDTO.getId()).orElseThrow(
-                                // log, should never happen though
-                                () -> new ValueDoesNotExistException(INGREDIENT_DOES_NOT_EXIST));
+                        ingredient = ingredientRepository.findById(ingredientDTO.getId()).orElseThrow(() -> {
+                            logger.info(INGREDIENT_DOES_NOT_EXIST); // should never happen though
+                            return new ValueDoesNotExistException(INGREDIENT_DOES_NOT_EXIST);
+                        });
                     } else {
                         ingredient = ingredientRepository.findIngredientByName(ingredientDTO.getName());
 
@@ -70,8 +74,10 @@ public class RecipeIngredientDAOService {
 
     public ResponseEntity<String> removeIngredientFromRecipe(UUID recipeId, UUID ingredientId) {
         final RecipeIngredient recipeIngredient = recipeIngredientRepository.findByRecipeIdAndIngredientId(recipeId, ingredientId)
-                .orElseThrow(
-                    () -> new ValueDoesNotExistException(RECIPE_INGREDIENT_DOES_NOT_EXIST));
+                .orElseThrow(() -> {
+                    logger.info(RECIPE_INGREDIENT_DOES_NOT_EXIST);
+                    return new ValueDoesNotExistException(RECIPE_INGREDIENT_DOES_NOT_EXIST);
+                });
 
         recipeIngredientRepository.delete(recipeIngredient);
         return new ResponseEntity<>(HttpStatus.GONE);

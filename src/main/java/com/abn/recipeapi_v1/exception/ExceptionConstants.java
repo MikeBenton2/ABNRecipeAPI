@@ -4,6 +4,7 @@ public class ExceptionConstants {
 
     private ExceptionConstants() {}
 
+    public static String JSON_PARSE_ERROR = "Unable to parse JSON file due to exception: ";
     public static String INGREDIENT_ALREADY_EXISTS = "Ingredient already exists";
     public static String INGREDIENT_DOES_NOT_EXIST = "Ingredient does not exist";
     public static String NO_INGREDIENTS_FOUND = "No ingredients found";
