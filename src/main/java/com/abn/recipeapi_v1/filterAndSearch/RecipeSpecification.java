@@ -1,60 +1,98 @@
 package com.abn.recipeapi_v1.filterAndSearch;
 
+import com.abn.recipeapi_v1.exception.InvalidFilterParameterException;
+import com.abn.recipeapi_v1.model.Ingredient;
 import com.abn.recipeapi_v1.model.Recipe;
-import jakarta.persistence.OrderBy;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-import org.hibernate.mapping.Collection;
+import jakarta.persistence.criteria.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.server.ServerErrorException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static com.abn.recipeapi_v1.exception.ExceptionConstants.INVALID_FILTER_PARAMETER;
 
 public class RecipeSpecification implements Specification<Recipe> {
 
-    private SearchRequest criteria;
+    private final SearchRequest criteria;
 
     public RecipeSpecification(SearchRequest criteria) {
         this.criteria = criteria;
     }
 
     @Override
-    public Predicate toPredicate(Root<Recipe> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-//        if (criteria.getOperation().equalsIgnoreCase("!=")) {
-//            RecipeIngredient recipeIngredient = new RecipeIngredient();
-//            recipeIngredient.setIngredient(new Ingredient(String.valueOf(criteria.getValue())));
-//            return criteriaBuilder.isNotMember(recipeIngredient, root.get("recipeIngredients"));
-//            return criteriaBuilder.notEqual(root.get("recipeIngredients").<Ingredient> get("ingredient").<String> get("name"), criteria.getValue());
+    public Predicate toPredicate(@Nullable Root<Recipe> root, @Nullable CriteriaQuery<?> query, @Nullable CriteriaBuilder criteriaBuilder) {
+        List<Predicate> predicates = new ArrayList<>();
 
-//            CriteriaBuilder.In<Object> inClause = criteriaBuilder.in(root.get(criteria.getKey()));
-//            inClause.value(criteria.getValue());
-//            Predicate predicate = criteriaBuilder.in(inClause);
-//            return predicate;
-//        }
-        Predicate predicate = null;
+        if (root == null || query == null || criteriaBuilder == null) {
+            throw new ServerErrorException("Internal Server error", null);
+        }
 
-        if(!CollectionUtils.isEmpty(criteria.filters())) {
+        if (!CollectionUtils.isEmpty(criteria.filters())) {
             for (Filter filter : criteria.filters()) {
                 if (filter.getOperation().equalsIgnoreCase(":")) {
-                    if (root.get(filter.getKey()).getJavaType() == String.class) {
-                        predicate = criteriaBuilder.and(criteriaBuilder.like(criteriaBuilder.lower(
-                                root.<String>get(filter.getKey())), "%" + String.valueOf(filter.getValue()).toLowerCase() + "%"));
+                    if (filter.getValue() instanceof String) {
+                        if (filter.getKey().equals("recipeIngredients")) {
+                            predicates.add(filterRecipesFor(filter.getValue(), true, root, query, criteriaBuilder));
+                        } else {
+                            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(
+                                    root.get(filter.getKey())), "%" + String.valueOf(filter.getValue()).toLowerCase() + "%"));
+                        }
                     } else {
-                        predicate = criteriaBuilder.and(criteriaBuilder.equal(root.get(filter.getKey()), filter.getValue()));
+                        predicates.add(criteriaBuilder.equal(root.get(filter.getKey()), filter.getValue()));
                     }
+                } else if (filter.getOperation().equalsIgnoreCase("!:")) {
+                    predicates.add(filterRecipesFor(filter.getValue(), false, root, query, criteriaBuilder));
+                } else {
+                    throw new InvalidFilterParameterException(INVALID_FILTER_PARAMETER);
                 }
             }
         }
 
-        return predicate;
+        return criteriaBuilder.and(predicates.toArray(new Predicate[] {}));
+    }
+
+    private Predicate filterRecipesFor(
+            Object ingredientName,
+            Boolean contains,
+            Root<Recipe> root,
+            CriteriaQuery<?> query,
+            CriteriaBuilder criteriaBuilder
+    ) {
+        if (ingredientName instanceof String) {
+            Predicate predicate;
+            String name = String.valueOf(ingredientName).toLowerCase();
+            Subquery<UUID> subquery = query.subquery(UUID.class);
+            Root<Recipe> subqueryRecipe = subquery.from(Recipe.class);
+            Join<Recipe, Ingredient> subqueryIngredient = subqueryRecipe.join("recipeIngredients");
+
+            if (contains) {
+                subquery.select(subqueryRecipe.get("id")).where(
+                        criteriaBuilder.equal(criteriaBuilder.lower(subqueryIngredient.get("ingredient").get("name")), name));
+
+                predicate = criteriaBuilder.in(root.get("id")).value(subquery);
+            } else {
+                subquery.select(subqueryRecipe.get("id")).where(
+                        criteriaBuilder.equal(criteriaBuilder.lower(subqueryIngredient.get("ingredient").get("name")), name));
+
+                predicate = criteriaBuilder.not(criteriaBuilder.in(root.get("id")).value(subquery));
+            }
+
+            return predicate;
+        } else {
+            throw new InvalidFilterParameterException(INVALID_FILTER_PARAMETER);
+        }
     }
 
     public static Pageable getSortingOrder(SearchRequest searchRequest) {
-        Integer page = searchRequest.page() != null ? searchRequest.page() : 0;
-        Integer numberOfElements = searchRequest.numberOfElements() != null ? searchRequest.numberOfElements() : 10;
+        int page = searchRequest.page() != null ? searchRequest.page() : 0;
+        int numberOfElements = searchRequest.numberOfElements() != null ? searchRequest.numberOfElements() : 10;
         Sort sortBy = searchRequest.sortBy() != null ? Sort.by(searchRequest.sortBy()).ascending() : Sort.unsorted();
 
         return PageRequest.of(page, numberOfElements, sortBy);

@@ -42,4 +42,15 @@ public class GeneralExceptionHandler {
 
         return new ResponseEntity<>(apiException, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(value = InvalidFilterParameterException.class)
+    public ResponseEntity<Object> handleInvalidFilterParameter(InvalidFilterParameterException e) {
+        APIException apiException = new APIException(
+                e.getMessage(),
+                HttpStatus.BAD_REQUEST,
+                ZonedDateTime.now()
+        );
+
+        return new ResponseEntity<>(apiException, HttpStatus.BAD_REQUEST);
+    }
 }
