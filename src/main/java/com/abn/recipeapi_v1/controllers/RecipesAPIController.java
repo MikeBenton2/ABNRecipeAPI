@@ -2,8 +2,8 @@ package com.abn.recipeapi_v1.controllers;
 
 import com.abn.recipeapi_v1.RecipesApi;
 import com.abn.recipeapi_v1.RecipesApiDelegate;
-import com.abn.recipeapi_v1.filterAndSearch.SearchRequest;
 import com.abn.recipeapi_v1.model.RecipeDTO;
+import com.abn.recipeapi_v1.model.SearchRequest;
 import com.abn.recipeapi_v1.services.RecipeDAOService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

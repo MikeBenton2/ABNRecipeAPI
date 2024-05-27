@@ -1,6 +1,6 @@
 package com.abn.recipeapi_v1;
 
-import com.abn.recipeapi_v1.filterAndSearch.SearchRequest;
+import com.abn.recipeapi_v1.model.SearchRequest;
 import com.abn.recipeapi_v1.model.RecipeDTO;
 import com.abn.recipeapi_v1.services.RecipeDAOService;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ class RecipeApiV1ApplicationHttpRequestTests {
     void getRecipesTest_no_searchRequest_should_default_succeed() throws Exception {
 
         ResponseEntity<List<RecipeDTO>> entity = new ResponseEntity<>(HttpStatus.OK);
-        SearchRequest searchRequest = new SearchRequest(null, null, null, null);
+        SearchRequest searchRequest = new SearchRequest();
 
         when(service.getRecipes(searchRequest)).thenReturn(entity);
 
@@ -49,7 +49,7 @@ class RecipeApiV1ApplicationHttpRequestTests {
     void getRecipesTest_invalid_parameter_fail() throws Exception {
 
         ResponseEntity<List<RecipeDTO>> entity = new ResponseEntity<>(HttpStatus.OK);
-        SearchRequest searchRequest = new SearchRequest(null, null, null, null);
+        SearchRequest searchRequest = new SearchRequest();
 
         when(service.getRecipes(searchRequest)).thenReturn(entity);
 

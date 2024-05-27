@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-04-09T11:23:04.561667+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-24T16:27:39.935937+02:00[Europe/Amsterdam]")
 @Validated
 @Tag(name = "ingredient", description = "the ingredient API")
 public interface IngredientsApi {

@@ -1,14 +1,19 @@
 package com.abn.recipeapi_v1;
 
-import com.abn.recipeapi_v1.filterAndSearch.SearchRequest;
+import com.abn.recipeapi_v1.model.Error;
 import com.abn.recipeapi_v1.model.RecipeDTO;
+import com.abn.recipeapi_v1.model.SearchRequest;
 import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.validation.constraints.*;
+import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
@@ -16,7 +21,7 @@ import jakarta.annotation.Generated;
  * A delegate to be called by the {@link RecipesApiController}}.
  * Implement this interface with a {@link org.springframework.stereotype.Service} annotated class.
  */
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-04-09T11:23:04.561667+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-24T16:27:39.935937+02:00[Europe/Amsterdam]")
 public interface RecipesApiDelegate {
 
     default Optional<NativeWebRequest> getRequest() {
@@ -89,6 +94,7 @@ public interface RecipesApiDelegate {
     /**
      * GET /recipes : Get all recipes
      *
+     * @param searchRequest Search request parameters (optional)
      * @return An array of recipes (status code 200)
      *         or Bad Request. (status code 400)
      *         or No recipes found. (status code 404)

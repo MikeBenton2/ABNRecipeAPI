@@ -1,3 +1,5 @@
 **/RecipesApiController.java
 **/IngredientsApiController.java
 **/RecipeIngredientsApiController.java
+**/Recipe.java
+**/Ingredient.java

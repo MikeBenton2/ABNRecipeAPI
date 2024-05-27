@@ -20,7 +20,7 @@ import jakarta.annotation.Generated;
  * RecipeIngredientId
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-04-09T11:23:04.561667+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-24T16:27:39.935937+02:00[Europe/Amsterdam]")
 @jakarta.persistence.Embeddable
 public class RecipeIngredientId implements Serializable {
 

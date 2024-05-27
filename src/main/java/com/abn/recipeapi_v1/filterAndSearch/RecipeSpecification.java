@@ -1,8 +1,10 @@
 package com.abn.recipeapi_v1.filterAndSearch;
 
 import com.abn.recipeapi_v1.exception.InvalidFilterParameterException;
+import com.abn.recipeapi_v1.model.Filter;
 import com.abn.recipeapi_v1.model.Ingredient;
 import com.abn.recipeapi_v1.model.Recipe;
+import com.abn.recipeapi_v1.model.SearchRequest;
 import jakarta.persistence.criteria.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,8 +36,8 @@ public class RecipeSpecification implements Specification<Recipe> {
             throw new ServerErrorException("Internal Server error", null);
         }
 
-        if (!CollectionUtils.isEmpty(criteria.filters())) {
-            for (Filter filter : criteria.filters()) {
+        if (!CollectionUtils.isEmpty(criteria.getFilters())) {
+            for (Filter filter : criteria.getFilters()) {
                 if (filter.getOperation().equalsIgnoreCase(":")) {
                     if (filter.getValue() instanceof String) {
                         if (filter.getKey().equals("recipeIngredients")) {
@@ -91,9 +93,9 @@ public class RecipeSpecification implements Specification<Recipe> {
     }
 
     public static Pageable getSortingOrder(SearchRequest searchRequest) {
-        int page = searchRequest.page() != null ? searchRequest.page() : 0;
-        int numberOfElements = searchRequest.numberOfElements() != null ? searchRequest.numberOfElements() : 10;
-        Sort sortBy = searchRequest.sortBy() != null ? Sort.by(searchRequest.sortBy()).ascending() : Sort.unsorted();
+        int page = searchRequest.getPage() != null ? searchRequest.getPage() : 0;
+        int numberOfElements = searchRequest.getNumberOfElements() != null ? searchRequest.getNumberOfElements() : 10;
+        Sort sortBy = searchRequest.getSortBy() != null ? Sort.by(searchRequest.getSortBy()).ascending() : Sort.unsorted();
 
         return PageRequest.of(page, numberOfElements, sortBy);
     }

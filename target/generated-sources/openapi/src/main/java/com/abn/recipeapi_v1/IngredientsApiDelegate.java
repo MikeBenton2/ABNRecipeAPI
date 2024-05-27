@@ -20,7 +20,7 @@ import jakarta.annotation.Generated;
  * A delegate to be called by the {@link IngredientsApiController}}.
  * Implement this interface with a {@link org.springframework.stereotype.Service} annotated class.
  */
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-04-09T11:23:04.561667+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-24T16:27:39.935937+02:00[Europe/Amsterdam]")
 public interface IngredientsApiDelegate {
 
     default Optional<NativeWebRequest> getRequest() {

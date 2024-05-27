@@ -12,6 +12,13 @@ paths:
       operationId: getRecipes
       tags:
         - recipe
+      requestBody:
+        description: "Search request parameters"
+        required: false
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/SearchRequest"
       responses:
         "200":
           description: "An array of recipes"
@@ -518,6 +525,7 @@ components:
       properties:
         id:
           x-field-extra-annotation: "@jakarta.persistence.EmbeddedId"
+          default: "new RecipeIngredientId()"
           allOf:
             - $ref: "#/components/schemas/RecipeIngredientId"
         recipe:
@@ -532,3 +540,27 @@ components:
           @jakarta.persistence.JoinColumn(name = \"ingredientId\", referencedColumnName = \"id\")"
           allOf:
              - $ref: "#/components/schemas/Ingredient"
+    Filter:
+      type: object
+      properties:
+        key:
+          type: string
+        operation:
+          type: string
+        numberOfElements:
+          type: integer
+        value:
+          type: object
+    SearchRequest:
+      type: object
+      properties:
+        filters:
+          type: array
+          items:
+            $ref: "#/components/schemas/Filter"
+        page:
+          type: integer
+        numberOfElements:
+          type: integer
+        sortBy:
+          type: string

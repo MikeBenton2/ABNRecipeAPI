@@ -1,10 +1,11 @@
 package com.abn.recipeapi_v1.services;
 
+import com.abn.recipeapi_v1.model.Ingredient;
+import com.abn.recipeapi_v1.model.Recipe;
 import com.abn.recipeapi_v1.RecipesApiDelegate;
 import com.abn.recipeapi_v1.exception.APIRequestException;
 import com.abn.recipeapi_v1.exception.ValueDoesNotExistException;
 import com.abn.recipeapi_v1.filterAndSearch.RecipeSpecification;
-import com.abn.recipeapi_v1.filterAndSearch.SearchRequest;
 import com.abn.recipeapi_v1.model.*;
 import com.abn.recipeapi_v1.repositories.IngredientRepository;
 import com.abn.recipeapi_v1.repositories.RecipeRepository;
@@ -46,18 +47,12 @@ public class RecipeDAOService implements RecipesApiDelegate {
         saveRecipesToDatabase(staticRecipes);
     }
 
-    public List<RecipeDTO> getStaticRecipes() {
-        return staticRecipes;
-    }
-
     //<editor-fold desc="HTTP Methods">
     public ResponseEntity<List<RecipeDTO>> findAllRecipes(SearchRequest searchRequest) {
 
         List<RecipeDTO> foundRecipes = new ArrayList<>();
         RecipeSpecification recipeSpecification = new RecipeSpecification(searchRequest);
         Pageable pageRequest = RecipeSpecification.getSortingOrder(searchRequest);
-
-        List<Recipe> recipeList = recipeRepository.findAll();
 
         recipeRepository.findAll(recipeSpecification, pageRequest).forEach(recipe -> {
             RecipeDTO recipeDTO = new RecipeDTO(
