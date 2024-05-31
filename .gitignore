@@ -1,5 +1,7 @@
 HELP.md
 
+docker/.env
+
 ### STS ###
 .apt_generated
 .classpath
