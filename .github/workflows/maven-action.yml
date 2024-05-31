@@ -51,5 +51,5 @@ jobs:
 
       - name: Step 6 - Build Images and Publish to Github
         run: |
-          chmod +x infra/AppBuild.sh && ./infra/AppBuild.sh false ${{ github.run_number }}
+          chmod +x AppBuild.sh && ./AppBuild.sh false ${{ github.run_number }}
           docker push ${{ env.IMAGE_REPOSITORY }}/abn-app:${{ github.run_number }}
