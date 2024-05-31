@@ -15,7 +15,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      IMAGE_REPOSITORY: ghcr.io/MikeBenton2/abnrecipeapi
+      IMAGE_REPOSITORY: ghcr.io/mikebenton2/abnrecipeapi
       BUILD_PATH: ./target
 
     steps:
