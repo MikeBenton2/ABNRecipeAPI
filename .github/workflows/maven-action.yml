@@ -15,7 +15,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      IMAGE_REPOSITORY: ghcr.io/MikeBenton2/ABNRecipeAPI
+      IMAGE_REPOSITORY: ghcr.io/MikeBenton2/abnrecipeapi
       BUILD_PATH: ./target
 
     steps:
@@ -52,4 +52,4 @@ jobs:
       - name: Step 6 - Build Images and Publish to Github
         run: |
           chmod +x AppBuild.sh && ./AppBuild.sh false ${{ github.run_number }}
-          docker push ${{ env.IMAGE_REPOSITORY }}/abn-app:${{ github.run_number }}
+          docker push ${{ env.IMAGE_REPOSITORY }}/abnrecipeapi:${{ github.run_number }}

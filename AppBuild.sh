@@ -13,5 +13,5 @@ fi
 
 
 echo 'Building ABN App Docker Image'
-docker build -t ghcr.io/MikeBenton2/ABNRecipeAPI/abn-app:"$tag" -f ./infra/docker/DockerfileApp .
+docker build -t ghcr.io/MikeBenton2/abnrecipeapi/abnrecipeapi:"$tag" -f ./infra/docker/DockerfileApp .
 echo '----------------------------------------------------------------------------------'
