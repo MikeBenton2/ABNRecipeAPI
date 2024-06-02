@@ -16,34 +16,34 @@ services:
     networks:
       - abn-network
 
-    abnrecipeapi:
-      image: "ghcr.io/mikebenton2/abnrecipeapi/abnrecipeapi:7"
-      container_name: abnrecipeapi
-      env_file:
-        - ../.env
-      environment:
-        - db_host=recipe_db
-        - db_username=postgres
-        - db_password=password
-      expose:
-        - "8080"
-      ports:
-        - "8080:8080"
-      restart: on-failure
-      depends_on:
-        recipe_db:
-          condition: service_healthy
-      links:
-        - recipe_db
-      healthcheck:
-        test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator" ]
-        interval: 10s
-        timeout: 5s
-        retries: 5
-        start_period: 15s
-      networks:
-        - abn-network
+  abnrecipeapi:
+    image: "ghcr.io/mikebenton2/abnrecipeapi/abnrecipeapi:7"
+    container_name: abnrecipeapi
+    env_file:
+      - .env
+    environment:
+      - db_host=recipe_db
+      - db_username=postgres
+      - db_password=password
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+    restart: on-failure
+    depends_on:
+      recipe_db:
+        condition: service_healthy
+    links:
+      - recipe_db
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    networks:
+      - abn-network
 
-  networks:
-    abn-network:
-      driver: bridge
+networks:
+  abn-network:
+    driver: bridge

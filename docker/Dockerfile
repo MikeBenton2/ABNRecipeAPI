@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk-alpine:21-latest
+FROM eclipse-temurin:21
 
 RUN apk --no-cache add curl
 
