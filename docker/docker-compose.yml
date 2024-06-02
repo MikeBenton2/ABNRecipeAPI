@@ -1,7 +1,7 @@
 services:
   recipe_db:
     container_name: recipe_db
-    image: postgres:16.2-alpine
+    image: arm64v8/postgres
     restart: always
     environment:
       POSTGRES_PASSWORD: password
@@ -17,7 +17,7 @@ services:
       - abn-network
 
   abnrecipeapi:
-    image: "ghcr.io/mikebenton2/abnrecipeapi/abnrecipeapi:7"
+    image: "ghcr.io/mikebenton2/abnrecipeapi/abnrecipeapi:10"
     container_name: abnrecipeapi
     env_file:
       - .env
