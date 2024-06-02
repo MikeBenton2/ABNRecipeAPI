@@ -1,6 +1,6 @@
 FROM arm64v8/amazoncorretto:21-alpine-full
 
-RUN apk --no-cache add curl
+#RUN apk --no-cache add curl
 
 VOLUME /tmp
 
