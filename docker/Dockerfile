@@ -1,4 +1,4 @@
-FROM arm64v8/eclipse-temurin:21-alpine
+FROM amazoncorretto:21-alpine-jdk
 
 RUN apk --no-cache add curl
 
