@@ -17,7 +17,7 @@ services:
       - abn-network
 
   abnrecipeapi:
-    image: "ghcr.io/mikebenton2/abnrecipeapi/abnrecipeapi:10"
+    image: "ghcr.io/mikebenton2/abnrecipeapi/abnrecipeapi:13"
     container_name: abnrecipeapi
     env_file:
       - .env

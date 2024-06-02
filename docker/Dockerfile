@@ -1,4 +1,4 @@
-FROM amazoncorretto:21-alpine-jdk
+FROM arm64v8/amazoncorretto:21-alpine-jdk
 
 RUN apk --no-cache add curl
 
