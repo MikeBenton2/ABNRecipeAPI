@@ -20,7 +20,7 @@ import jakarta.annotation.Generated;
  * A delegate to be called by the {@link IngredientsApiController}}.
  * Implement this interface with a {@link org.springframework.stereotype.Service} annotated class.
  */
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-24T16:27:39.935937+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-06-24T15:54:59.119904+02:00[Europe/Amsterdam]")
 public interface IngredientsApiDelegate {
 
     default Optional<NativeWebRequest> getRequest() {
@@ -36,9 +36,14 @@ public interface IngredientsApiDelegate {
      *         or Server error (status code 500)
      * @see IngredientsApi#createIngredient
      */
-    default ResponseEntity<String> createIngredient(IngredientDTO ingredientDTO) {
+    default ResponseEntity<IngredientDTO> createIngredient(IngredientDTO ingredientDTO) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                     String exampleString = "{ \"code\" : 6, \"message\" : \"message\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
@@ -137,9 +142,14 @@ public interface IngredientsApiDelegate {
      *         or Server error (status code 500)
      * @see IngredientsApi#updateIngredient
      */
-    default ResponseEntity<String> updateIngredient(IngredientDTO ingredientDTO) {
+    default ResponseEntity<IngredientDTO> updateIngredient(IngredientDTO ingredientDTO) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                     String exampleString = "{ \"code\" : 6, \"message\" : \"message\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);

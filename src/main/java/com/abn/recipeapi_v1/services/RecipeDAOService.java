@@ -1,16 +1,15 @@
 package com.abn.recipeapi_v1.services;
 
-import com.abn.recipeapi_v1.model.Ingredient;
-import com.abn.recipeapi_v1.model.Recipe;
 import com.abn.recipeapi_v1.RecipesApiDelegate;
+import com.abn.recipeapi_v1.entities.Recipe;
 import com.abn.recipeapi_v1.exception.APIRequestException;
 import com.abn.recipeapi_v1.exception.ValueDoesNotExistException;
 import com.abn.recipeapi_v1.filterAndSearch.RecipeSpecification;
-import com.abn.recipeapi_v1.model.*;
-import com.abn.recipeapi_v1.repositories.IngredientRepository;
+import com.abn.recipeapi_v1.mapping.ObjectMapping;
+import com.abn.recipeapi_v1.model.RecipeDTO;
+import com.abn.recipeapi_v1.model.SearchRequest;
 import com.abn.recipeapi_v1.repositories.RecipeRepository;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,32 +19,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.abn.recipeapi_v1.exception.ExceptionConstants.*;
+import static com.abn.recipeapi_v1.exception.ExceptionConstants.NO_RECIPES_FOUND;
+import static com.abn.recipeapi_v1.exception.ExceptionConstants.RECIPE_DOES_NOT_EXIST;
 
 @Service
+@RequiredArgsConstructor
 public class RecipeDAOService implements RecipesApiDelegate {
     private static final Logger logger = LoggerFactory.getLogger(RecipeDAOService.class);
-    private List<RecipeDTO> staticRecipes = new ArrayList<>();
     private final RecipeRepository recipeRepository;
-    private final IngredientRepository ingredientRepository;
-
-    @Autowired
-    public RecipeDAOService(
-            RecipeRepository recipeRepository,
-            IngredientRepository ingredientRepository
-    ) {
-        this.recipeRepository = recipeRepository;
-        this.ingredientRepository = ingredientRepository;
-        retrieveDefaultRecipesFromJSON();
-        saveRecipesToDatabase(staticRecipes);
-    }
+	private final RecipeIngredientDAOService recipeIngredientDAOService;
 
     //<editor-fold desc="HTTP Methods">
     public ResponseEntity<List<RecipeDTO>> findAllRecipes(SearchRequest searchRequest) {
@@ -55,19 +41,7 @@ public class RecipeDAOService implements RecipesApiDelegate {
         Pageable pageRequest = RecipeSpecification.getSortingOrder(searchRequest);
 
         recipeRepository.findAll(recipeSpecification, pageRequest).forEach(recipe -> {
-            RecipeDTO recipeDTO = new RecipeDTO(
-                recipe.getName(),
-                recipe.getInstructions(),
-                recipe.getIsVegetarian(),
-                recipe.getNumberOfServings(),
-                recipe.getRecipeIngredients().stream()
-                        .map(ingredient ->
-                                new IngredientDTO(
-                                        ingredient.getIngredient().getId(),
-                                        ingredient.getIngredient().getName()
-                                )
-                        ).toList());
-            recipeDTO.setId(recipe.getId());
+			RecipeDTO recipeDTO = ObjectMapping.mapRecipeToRecipeDTO(recipe);
             foundRecipes.add(recipeDTO);
         });
 
@@ -79,112 +53,67 @@ public class RecipeDAOService implements RecipesApiDelegate {
         return new ResponseEntity<>(foundRecipes, HttpStatus.OK);
     }
 
-    public ResponseEntity<RecipeDTO> findRecipeById(UUID recipeId) {
-        Recipe foundRecipe = recipeRepository.findById(recipeId).orElseThrow(() -> {
-            logger.info(RECIPE_NOT_FOUND);
-            return new APIRequestException(RECIPE_NOT_FOUND);
-        });
+    public ResponseEntity<RecipeDTO> getRecipeById(UUID recipeId) {
+        Recipe recipe = findRecipeByID(recipeId);
 
-        RecipeDTO recipeDTO = new RecipeDTO(
-                foundRecipe.getName(),
-                foundRecipe.getInstructions(),
-                foundRecipe.getIsVegetarian(),
-                foundRecipe.getNumberOfServings(),
-                foundRecipe.getRecipeIngredients().stream()
-                        .map(ingredient ->
-                                new IngredientDTO(
-                                        ingredient.getIngredient().getId(),
-                                        ingredient.getIngredient().getName()
-                                )
-                        ).toList());
-        recipeDTO.setId(foundRecipe.getId());
+        RecipeDTO recipeDTO = ObjectMapping.mapRecipeToRecipeDTO(recipe);
 
         return new ResponseEntity<>(recipeDTO, HttpStatus.OK);
     }
 
-    public ResponseEntity<String> createRecipe(RecipeDTO recipeDTO) {
-        return saveRecipesToDatabase(List.of(recipeDTO));
+    public ResponseEntity<RecipeDTO> createRecipe(RecipeDTO recipeDTO) {
+        return saveRecipeToDatabase(recipeDTO);
     }
 
     public ResponseEntity<String> deleteRecipe(UUID id) {
-        final Recipe recipe = recipeRepository.findById(id)
-                .orElseThrow(() -> {
-                    logger.info(RECIPE_DOES_NOT_EXIST);
-                    return new ValueDoesNotExistException(RECIPE_DOES_NOT_EXIST);
-                });
+        final Recipe recipe = findRecipeByID(id);
+
         recipeRepository.delete(recipe);
+
         return ResponseEntity.status(HttpStatus.GONE).build();
     }
 
-    public ResponseEntity<String> updateRecipe(RecipeDTO updatedRecipe) {
-        Recipe recipe = recipeRepository.findById(updatedRecipe.getId())
-                .orElseThrow(() -> {
-                    logger.info(RECIPE_DOES_NOT_EXIST);
-                    return new ValueDoesNotExistException(RECIPE_DOES_NOT_EXIST);
-                });
+	public ResponseEntity<RecipeDTO> updateRecipe(RecipeDTO recipeDTO) {
+        Recipe recipe = findRecipeByID(recipeDTO.getId());
 
-        recipe.setName(updatedRecipe.getName());
-        recipe.setInstructions(updatedRecipe.getInstructions());
-        recipe.setIsVegetarian(updatedRecipe.getIsVegetarian());
-        recipe.setNumberOfServings(updatedRecipe.getNumberOfServings());
+        recipe.setName(recipeDTO.getName());
+        recipe.setInstructions(recipeDTO.getInstructions());
+        recipe.setIsVegetarian(recipeDTO.getIsVegetarian());
+        recipe.setNumberOfServings(recipeDTO.getNumberOfServings());
 
-        recipeRepository.save(recipe);
+        recipe = recipeRepository.save(recipe);
+		RecipeDTO updatedRecipe = ObjectMapping.mapRecipeToRecipeDTO(recipe);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+		return new ResponseEntity<>(updatedRecipe, HttpStatus.OK);
     }
     //</editor-fold>
 
     //<editor-fold desc="Helper Functions">
-    private void retrieveDefaultRecipesFromJSON() {
-        Gson gson = new Gson();
+    private ResponseEntity<RecipeDTO> saveRecipeToDatabase(RecipeDTO recipeDTO) {
+		Recipe recipe = ObjectMapping.mapRecipeDTOtoRecipe(recipeDTO);
 
-        try (FileReader reader = new FileReader("src/main/resources/recipes.json")) {
-            //Read JSON file
-            Type userListType = new TypeToken<List<RecipeDTO>>(){}.getType();
-            staticRecipes = gson.fromJson(reader, userListType);
+        Recipe updatedRecipe = recipeRepository.save(recipe);
 
-        } catch (IOException e) {
-            logger.info(JSON_PARSE_ERROR + e);
-        }
-    }
+        recipeDTO.getIngredients().forEach(ingredientDTO -> {
+			recipeIngredientDAOService.saveRecipeIngredient(ingredientDTO, updatedRecipe);
+		});
 
-    ResponseEntity<String> saveRecipesToDatabase(List<RecipeDTO> recipes) {
-        recipes.forEach(recipeDTO -> {
-            Recipe recipe = new Recipe();
-
-            recipe.setName(recipeDTO.getName());
-            recipe.setInstructions(recipeDTO.getInstructions());
-            recipe.setIsVegetarian(recipeDTO.getIsVegetarian());
-            recipe.setNumberOfServings(recipeDTO.getNumberOfServings());
-            recipe.setRecipeIngredients(new ArrayList<>());
-
-            Recipe updatedRecipe = recipeRepository.save(recipe);
-
-            recipeDTO.getIngredients()
-                    .forEach(recipeIngredient -> {
-                        Ingredient ingredient;
-
-                        if (recipeIngredient.getId() != null) {
-                            ingredient = ingredientRepository.findById(recipeIngredient.getId())
-                                    .orElseThrow(() -> {
-                                        logger.info(INGREDIENT_DOES_NOT_EXIST); // should never happen, deeper bug then
-                                        return new ValueDoesNotExistException(INGREDIENT_DOES_NOT_EXIST);
-                                    });
-                        } else {
-                            ingredient = ingredientRepository.findIngredientByName(recipeIngredient.getName());
-                            if(ingredient == null) {
-                                ingredient = ingredientRepository.save(new Ingredient(recipeIngredient.getName()));
-                            }
-                        }
-
-                        updatedRecipe.addRecipeIngredientsItem(new RecipeIngredient(updatedRecipe, ingredient));
-                    });
-
-            recipeRepository.save(updatedRecipe);
-        });
+        recipeRepository.save(updatedRecipe);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+	public Recipe findRecipeByID(UUID id) {
+		return recipeRepository.findById(id)
+				.orElseThrow(() -> {
+					logger.info(RECIPE_DOES_NOT_EXIST);
+					return new ValueDoesNotExistException(RECIPE_DOES_NOT_EXIST);
+				});
+	}
+
+	public void deleteAllRecipes() {
+		recipeRepository.deleteAll();
+	}
     //</editor-fold>
 }
 

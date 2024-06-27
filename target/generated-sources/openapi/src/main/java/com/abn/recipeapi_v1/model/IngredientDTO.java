@@ -20,7 +20,7 @@ import jakarta.annotation.Generated;
  * IngredientDTO
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-24T16:27:39.935937+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-06-24T15:54:59.119904+02:00[Europe/Amsterdam]")
 public class IngredientDTO implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -36,8 +36,7 @@ public class IngredientDTO implements Serializable {
   /**
    * Constructor with only required parameters
    */
-  public IngredientDTO(UUID id, String name) {
-    this.id = id;
+  public IngredientDTO(String name) {
     this.name = name;
   }
 
@@ -51,7 +50,7 @@ public class IngredientDTO implements Serializable {
    * @return id
   */
   @Valid 
-  @Schema(name = "id", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public UUID getId() {
     return id;

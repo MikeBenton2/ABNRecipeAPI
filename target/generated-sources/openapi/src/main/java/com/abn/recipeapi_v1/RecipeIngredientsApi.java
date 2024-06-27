@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-24T16:27:39.935937+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-06-24T15:54:59.119904+02:00[Europe/Amsterdam]")
 @Validated
 @Tag(name = "recipeIngredient", description = "the recipeIngredient API")
 public interface RecipeIngredientsApi {
@@ -40,7 +40,7 @@ public interface RecipeIngredientsApi {
     }
 
     /**
-     * POST /recipeIngredients : Add a ingredient to a recipe
+     * POST /recipeIngredients : Add ingredients to a recipe
      *
      * @param recipeDTO Add Ingredient to Recipe (required)
      * @return Ingredient added successfully. (status code 201)
@@ -48,12 +48,12 @@ public interface RecipeIngredientsApi {
      *         or Server error (status code 500)
      */
     @Operation(
-        operationId = "addIngredientToRecipe",
-        summary = "Add a ingredient to a recipe",
+        operationId = "addIngredientsToRecipe",
+        summary = "Add ingredients to a recipe",
         tags = { "recipeIngredient" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Ingredient added successfully.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = RecipeDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request.", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
@@ -70,10 +70,10 @@ public interface RecipeIngredientsApi {
         consumes = { "application/json" }
     )
     
-    default ResponseEntity<String> addIngredientToRecipe(
+    default ResponseEntity<RecipeDTO> addIngredientsToRecipe(
         @Parameter(name = "RecipeDTO", description = "Add Ingredient to Recipe", required = true) @Valid @RequestBody RecipeDTO recipeDTO
     ) {
-        return getDelegate().addIngredientToRecipe(recipeDTO);
+        return getDelegate().addIngredientsToRecipe(recipeDTO);
     }
 
 

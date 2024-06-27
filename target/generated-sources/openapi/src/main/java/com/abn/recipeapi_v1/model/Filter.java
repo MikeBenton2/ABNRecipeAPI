@@ -19,7 +19,8 @@ import jakarta.annotation.Generated;
  * Filter
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-24T16:27:39.935937+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-06-24T15:54:59.119904+02:00[Europe/Amsterdam]")
+@lombok.Builder
 public class Filter implements Serializable {
 
   private static final long serialVersionUID = 1L;

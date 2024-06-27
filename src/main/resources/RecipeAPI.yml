@@ -86,7 +86,7 @@ paths:
           content:
             "application/json":
               schema:
-                type: string
+                $ref: "#/components/schemas/RecipeDTO"
         "400":
             description: "Bad Request."
             content:
@@ -117,7 +117,7 @@ paths:
           content:
             "application/json":
               schema:
-                type: string
+                $ref: "#/components/schemas/RecipeDTO"
         "400":
           description: "Bad Request."
           content:
@@ -248,7 +248,7 @@ paths:
           content:
             "application/json":
               schema:
-                type: string
+                $ref: "#/components/schemas/IngredientDTO"
         "400":
           description: "Bad Request."
           content:
@@ -279,7 +279,7 @@ paths:
           content:
             "application/json":
               schema:
-                type: string
+                $ref: "#/components/schemas/IngredientDTO"
         "400":
           description: "Bad Request."
           content:
@@ -339,8 +339,8 @@ paths:
           description: Unauthorized
   /recipeIngredients:
     post:
-      summary: Add a ingredient to a recipe
-      operationId: addIngredientToRecipe
+      summary: Add ingredients to a recipe
+      operationId: addIngredientsToRecipe
       tags:
         - recipeIngredient
       requestBody:
@@ -356,7 +356,7 @@ paths:
           content:
             "application/json":
               schema:
-                type: string
+                $ref: "#/components/schemas/RecipeDTO"
         "400":
           description: "Bad Request."
           content:
@@ -403,36 +403,6 @@ paths:
           description: Unauthorized
 components:
   schemas:
-    Recipe:
-      type: object
-      x-class-extra-annotation: "@jakarta.persistence.Entity(name = \"Recipe\")"
-      required:
-        - name
-        - instructions
-        - isVegetarian
-        - numberOfServings
-        - ingredients
-      properties:
-        id:
-          type: string
-          x-field-extra-annotation: "@jakarta.persistence.Id @jakarta.persistence.GeneratedValue"
-          format: uuid
-          readOnly: true
-        name:
-          type: string
-          minLength: 1
-        instructions:
-          type: string
-          minLength: 1
-        isVegetarian:
-          type: boolean
-        numberOfServings:
-          type: integer
-        recipeIngredients:
-          type: array
-          x-field-extra-annotation: "@jakarta.persistence.OneToMany(mappedBy = \"recipe\", cascade = CascadeType.ALL, orphanRemoval = true)"
-          items:
-            $ref: "#/components/schemas/RecipeIngredient"
     RecipeDTO:
       type: object
       required:
@@ -445,7 +415,6 @@ components:
         id:
           type: string
           format: uuid
-          readOnly: true
         name:
           type: string
           minLength: 1
@@ -462,86 +431,20 @@ components:
           maxItems: 100
           items:
             $ref: "#/components/schemas/IngredientDTO"
-    Ingredient:
-      type: object
-      x-class-extra-annotation: "@jakarta.persistence.Entity(name = \"Ingredient\")"
-      required:
-          - name
-      properties:
-          id:
-            type: string
-            x-field-extra-annotation: "@jakarta.persistence.Id @jakarta.persistence.GeneratedValue"
-            format: uuid
-            readOnly: true
-          name:
-            type: string
-            minLength: 1
-          recipeIngredients:
-            type: array
-            x-field-extra-annotation: "@jakarta.persistence.OneToMany(mappedBy = \"ingredient\", cascade = CascadeType.ALL)"
-            items:
-              $ref: "#/components/schemas/RecipeIngredient"
     IngredientDTO:
       type: object
       required:
-        - id
         - name
       properties:
         id:
           type: string
           format: uuid
-          readOnly: true
         name:
           type: string
           minLength: 1
-    Error:
-      type: object
-      required:
-        - code
-        - message
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-    RecipeIngredientId:
-      type: object
-      x-class-extra-annotation: "@jakarta.persistence.Embeddable"
-      properties:
-        recipeId:
-          type: string
-          format: uuid
-        ingredientId:
-          type: string
-          format: uuid
-    RecipeIngredient:
-      type: object
-      required:
-        - recipe
-        - ingredient
-      x-class-extra-annotation: "@jakarta.persistence.Entity(name = \"RecipeIngredient\")
-      @jakarta.persistence.Table(name = \"RecipeIngredient\")"
-      properties:
-        id:
-          x-field-extra-annotation: "@jakarta.persistence.EmbeddedId"
-          default: "new RecipeIngredientId()"
-          allOf:
-            - $ref: "#/components/schemas/RecipeIngredientId"
-        recipe:
-          x-field-extra-annotation: "@jakarta.persistence.ManyToOne
-          @jakarta.persistence.MapsId(\"recipeId\")
-          @jakarta.persistence.JoinColumn(name = \"recipeId\", referencedColumnName = \"id\")"
-          allOf:
-            - $ref: "#/components/schemas/Recipe"
-        ingredient:
-          x-field-extra-annotation: "@jakarta.persistence.ManyToOne
-          @jakarta.persistence.MapsId(\"ingredientId\")
-          @jakarta.persistence.JoinColumn(name = \"ingredientId\", referencedColumnName = \"id\")"
-          allOf:
-             - $ref: "#/components/schemas/Ingredient"
     Filter:
       type: object
+      x-class-extra-annotation: "@lombok.Builder"
       properties:
         key:
           type: string
@@ -553,6 +456,7 @@ components:
           type: object
     SearchRequest:
       type: object
+      x-class-extra-annotation: "@lombok.Builder"
       properties:
         filters:
           type: array
@@ -563,4 +467,16 @@ components:
         numberOfElements:
           type: integer
         sortBy:
+          type: string
+    Error:
+      type: object
+      x-class-extra-annotation: "@lombok.Builder"
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
           type: string

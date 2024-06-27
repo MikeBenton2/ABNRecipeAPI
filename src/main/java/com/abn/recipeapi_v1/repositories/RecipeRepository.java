@@ -1,6 +1,6 @@
 package com.abn.recipeapi_v1.repositories;
 
-import com.abn.recipeapi_v1.model.Recipe;
+import com.abn.recipeapi_v1.entities.Recipe;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

@@ -20,7 +20,7 @@ import jakarta.annotation.Generated;
  * A delegate to be called by the {@link RecipeIngredientsApiController}}.
  * Implement this interface with a {@link org.springframework.stereotype.Service} annotated class.
  */
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-24T16:27:39.935937+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-06-24T15:54:59.119904+02:00[Europe/Amsterdam]")
 public interface RecipeIngredientsApiDelegate {
 
     default Optional<NativeWebRequest> getRequest() {
@@ -28,17 +28,22 @@ public interface RecipeIngredientsApiDelegate {
     }
 
     /**
-     * POST /recipeIngredients : Add a ingredient to a recipe
+     * POST /recipeIngredients : Add ingredients to a recipe
      *
      * @param recipeDTO Add Ingredient to Recipe (required)
      * @return Ingredient added successfully. (status code 201)
      *         or Bad Request. (status code 400)
      *         or Server error (status code 500)
-     * @see RecipeIngredientsApi#addIngredientToRecipe
+     * @see RecipeIngredientsApi#addIngredientsToRecipe
      */
-    default ResponseEntity<String> addIngredientToRecipe(RecipeDTO recipeDTO) {
+    default ResponseEntity<RecipeDTO> addIngredientsToRecipe(RecipeDTO recipeDTO) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"numberOfServings\" : 0, \"instructions\" : \"instructions\", \"name\" : \"name\", \"isVegetarian\" : true, \"ingredients\" : [ { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\" }, { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\" }, { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\" }, { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\" }, { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\" } ], \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                     String exampleString = "{ \"code\" : 6, \"message\" : \"message\" }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);

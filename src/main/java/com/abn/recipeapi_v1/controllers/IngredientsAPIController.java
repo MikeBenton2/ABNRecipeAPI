@@ -4,6 +4,7 @@ import com.abn.recipeapi_v1.IngredientsApi;
 import com.abn.recipeapi_v1.IngredientsApiDelegate;
 import com.abn.recipeapi_v1.model.IngredientDTO;
 import com.abn.recipeapi_v1.services.IngredientDAOService;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,8 @@ import java.util.UUID;
 @RequestMapping("${openapi.ingredient.base-path:}")
 public class IngredientsAPIController implements IngredientsApi {
 
-    private final IngredientsApiDelegate delegate;
+    @Getter
+	private final IngredientsApiDelegate delegate;
     private final IngredientDAOService service;
     public IngredientsAPIController(
             @Autowired(required = false) IngredientsApiDelegate delegate,
@@ -27,11 +29,7 @@ public class IngredientsAPIController implements IngredientsApi {
         this.service = service;
     }
 
-    public IngredientsApiDelegate getDelegate() {
-        return delegate;
-    }
-
-    @Override
+	@Override
     public ResponseEntity<List<IngredientDTO>> getIngredients() {
         return service.getAllIngredients();
     }
@@ -42,12 +40,12 @@ public class IngredientsAPIController implements IngredientsApi {
     }
 
     @Override
-    public ResponseEntity<String> createIngredient(IngredientDTO ingredientDTO) {
+    public ResponseEntity<IngredientDTO> createIngredient(IngredientDTO ingredientDTO) {
         return service.createIngredient(ingredientDTO.getName());
     }
 
     @Override
-    public ResponseEntity<String> updateIngredient(IngredientDTO ingredientDTO) {
+    public ResponseEntity<IngredientDTO> updateIngredient(IngredientDTO ingredientDTO) {
         return service.update(ingredientDTO);
     }
 

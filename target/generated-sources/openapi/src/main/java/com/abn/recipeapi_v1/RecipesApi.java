@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-24T16:27:39.935937+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-06-24T15:54:59.119904+02:00[Europe/Amsterdam]")
 @Validated
 @Tag(name = "recipe", description = "the recipe API")
 public interface RecipesApi {
@@ -54,7 +54,7 @@ public interface RecipesApi {
         tags = { "recipe" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Recipe created successfully.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = RecipeDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request.", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
@@ -71,7 +71,7 @@ public interface RecipesApi {
         consumes = { "application/json" }
     )
     
-    default ResponseEntity<String> createRecipe(
+    default ResponseEntity<RecipeDTO> createRecipe(
         @Parameter(name = "RecipeDTO", description = "Create Recipe payload", required = true) @Valid @RequestBody RecipeDTO recipeDTO
     ) {
         return getDelegate().createRecipe(recipeDTO);
@@ -196,7 +196,7 @@ public interface RecipesApi {
         tags = { "recipe" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Recipe updated successfully.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = RecipeDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request.", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
@@ -213,7 +213,7 @@ public interface RecipesApi {
         consumes = { "application/json" }
     )
     
-    default ResponseEntity<String> updateRecipe(
+    default ResponseEntity<RecipeDTO> updateRecipe(
         @Parameter(name = "RecipeDTO", description = "Updated Recipe payload", required = true) @Valid @RequestBody RecipeDTO recipeDTO
     ) {
         return getDelegate().updateRecipe(recipeDTO);

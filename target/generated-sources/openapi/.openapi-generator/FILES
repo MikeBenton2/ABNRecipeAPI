@@ -9,6 +9,4 @@ src/main/java/com/abn/recipeapi_v1/model/Error.java
 src/main/java/com/abn/recipeapi_v1/model/Filter.java
 src/main/java/com/abn/recipeapi_v1/model/IngredientDTO.java
 src/main/java/com/abn/recipeapi_v1/model/RecipeDTO.java
-src/main/java/com/abn/recipeapi_v1/model/RecipeIngredient.java
-src/main/java/com/abn/recipeapi_v1/model/RecipeIngredientId.java
 src/main/java/com/abn/recipeapi_v1/model/SearchRequest.java

@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-24T16:27:39.935937+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-06-24T15:54:59.119904+02:00[Europe/Amsterdam]")
 @Validated
 @Tag(name = "ingredient", description = "the ingredient API")
 public interface IngredientsApi {
@@ -53,7 +53,7 @@ public interface IngredientsApi {
         tags = { "ingredient" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Ingredient created successfully.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = IngredientDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request.", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
@@ -70,7 +70,7 @@ public interface IngredientsApi {
         consumes = { "application/json" }
     )
     
-    default ResponseEntity<String> createIngredient(
+    default ResponseEntity<IngredientDTO> createIngredient(
         @Parameter(name = "IngredientDTO", description = "Create Ingredient", required = true) @Valid @RequestBody IngredientDTO ingredientDTO
     ) {
         return getDelegate().createIngredient(ingredientDTO);
@@ -193,7 +193,7 @@ public interface IngredientsApi {
         tags = { "recipe" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Ingredient updated successfully.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = IngredientDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request.", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
@@ -210,7 +210,7 @@ public interface IngredientsApi {
         consumes = { "application/json" }
     )
     
-    default ResponseEntity<String> updateIngredient(
+    default ResponseEntity<IngredientDTO> updateIngredient(
         @Parameter(name = "IngredientDTO", description = "Updated Ingredient", required = true) @Valid @RequestBody IngredientDTO ingredientDTO
     ) {
         return getDelegate().updateIngredient(ingredientDTO);
