@@ -17,14 +17,10 @@ services:
       - abn-network
 
   abnrecipeapi:
-    image: "ghcr.io/mikebenton2/abnrecipeapi/abnrecipeapi:16"
+    image: "ghcr.io/mikebenton2/abnrecipeapi/abnrecipeapi:19"
     container_name: abnrecipeapi
     env_file:
       - .env
-    environment:
-      - db_host=recipe_db
-      - db_username=postgres
-      - db_password=password
     expose:
       - "8080"
     ports:

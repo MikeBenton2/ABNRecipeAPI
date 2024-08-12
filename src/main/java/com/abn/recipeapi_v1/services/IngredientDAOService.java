@@ -6,17 +6,17 @@ import com.abn.recipeapi_v1.exception.ValueDoesNotExistException;
 import com.abn.recipeapi_v1.mapping.ObjectMapping;
 import com.abn.recipeapi_v1.model.IngredientDTO;
 import com.abn.recipeapi_v1.repositories.IngredientRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.swing.text.html.Option;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static com.abn.recipeapi_v1.exception.ExceptionConstants.*;

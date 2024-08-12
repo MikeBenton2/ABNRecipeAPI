@@ -132,7 +132,7 @@
                             </supportingFilesToGenerate>
                             <ignoreFileOverride>.openapi-generator-ignore</ignoreFileOverride>
                             <configOptions>
-                                <delegatePattern>true</delegatePattern>
+                                <delegatePattern>false</delegatePattern>
                                 <useJakartaEe>true</useJakartaEe>
                                 <serializableModel>true</serializableModel>
                             </configOptions>

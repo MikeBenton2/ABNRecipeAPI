@@ -24,7 +24,7 @@ import jakarta.annotation.Generated;
  * RecipeDTO
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-06-24T15:54:59.119904+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-12T11:16:38.722740+02:00[Europe/Amsterdam]")
 public class RecipeDTO implements Serializable {
 
   private static final long serialVersionUID = 1L;

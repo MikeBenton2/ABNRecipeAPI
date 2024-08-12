@@ -1,10 +1,7 @@
 src/main/java/com/abn/recipeapi_v1/ApiUtil.java
 src/main/java/com/abn/recipeapi_v1/IngredientsApi.java
-src/main/java/com/abn/recipeapi_v1/IngredientsApiDelegate.java
 src/main/java/com/abn/recipeapi_v1/RecipeIngredientsApi.java
-src/main/java/com/abn/recipeapi_v1/RecipeIngredientsApiDelegate.java
 src/main/java/com/abn/recipeapi_v1/RecipesApi.java
-src/main/java/com/abn/recipeapi_v1/RecipesApiDelegate.java
 src/main/java/com/abn/recipeapi_v1/model/Error.java
 src/main/java/com/abn/recipeapi_v1/model/Filter.java
 src/main/java/com/abn/recipeapi_v1/model/IngredientDTO.java

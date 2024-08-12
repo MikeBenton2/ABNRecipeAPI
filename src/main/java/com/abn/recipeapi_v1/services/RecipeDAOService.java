@@ -1,6 +1,5 @@
 package com.abn.recipeapi_v1.services;
 
-import com.abn.recipeapi_v1.RecipesApiDelegate;
 import com.abn.recipeapi_v1.entities.Recipe;
 import com.abn.recipeapi_v1.exception.APIRequestException;
 import com.abn.recipeapi_v1.exception.ValueDoesNotExistException;
@@ -12,7 +11,6 @@ import com.abn.recipeapi_v1.repositories.RecipeRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +26,7 @@ import static com.abn.recipeapi_v1.exception.ExceptionConstants.RECIPE_DOES_NOT_
 
 @Service
 @RequiredArgsConstructor
-public class RecipeDAOService implements RecipesApiDelegate {
+public class RecipeDAOService {
     private static final Logger logger = LoggerFactory.getLogger(RecipeDAOService.class);
     private final RecipeRepository recipeRepository;
 	private final RecipeIngredientDAOService recipeIngredientDAOService;
