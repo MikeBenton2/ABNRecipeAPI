@@ -1,9 +1,10 @@
 package com.abn.recipeapi_v1.filterAndSearch;
 
+import com.abn.recipeapi_v1.exception.ExceptionConstants;
 import com.abn.recipeapi_v1.exception.InvalidFilterParameterException;
 import com.abn.recipeapi_v1.model.Filter;
-import com.abn.recipeapi_v1.model.Ingredient;
-import com.abn.recipeapi_v1.model.Recipe;
+import com.abn.recipeapi_v1.entities.Ingredient;
+import com.abn.recipeapi_v1.entities.Recipe;
 import com.abn.recipeapi_v1.model.SearchRequest;
 import jakarta.persistence.criteria.*;
 import org.springframework.data.domain.PageRequest;
@@ -17,8 +18,6 @@ import org.springframework.web.server.ServerErrorException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import static com.abn.recipeapi_v1.exception.ExceptionConstants.INVALID_FILTER_PARAMETER;
 
 public class RecipeSpecification implements Specification<Recipe> {
 
@@ -52,7 +51,7 @@ public class RecipeSpecification implements Specification<Recipe> {
                 } else if (filter.getOperation().equalsIgnoreCase("!:")) {
                     predicates.add(filterRecipesFor(filter.getValue(), false, root, query, criteriaBuilder));
                 } else {
-                    throw new InvalidFilterParameterException(INVALID_FILTER_PARAMETER);
+                    throw new InvalidFilterParameterException(ExceptionConstants.INVALID_FILTER_PARAMETER);
                 }
             }
         }
@@ -88,7 +87,7 @@ public class RecipeSpecification implements Specification<Recipe> {
 
             return predicate;
         } else {
-            throw new InvalidFilterParameterException(INVALID_FILTER_PARAMETER);
+            throw new InvalidFilterParameterException(ExceptionConstants.INVALID_FILTER_PARAMETER);
         }
     }
 

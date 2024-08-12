@@ -24,7 +24,7 @@ import jakarta.annotation.Generated;
  * RecipeDTO
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-24T16:27:39.935937+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-12T11:16:38.722740+02:00[Europe/Amsterdam]")
 public class RecipeDTO implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -67,7 +67,7 @@ public class RecipeDTO implements Serializable {
    * @return id
   */
   @Valid 
-  @Schema(name = "id", accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public UUID getId() {
     return id;

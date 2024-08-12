@@ -13,5 +13,6 @@ public class ExceptionConstants {
     public static String NO_RECIPE_ID_PROVIDED = "Please provide the Recipe ID when adding ingredients";
     public static String NO_RECIPES_FOUND = "No recipes found.";
     public static String RECIPE_INGREDIENT_DOES_NOT_EXIST = "RecipeIngredient does not exist";
+	public static String RECIPE_INGREDIENT_ALREADY_EXISTS = "RecipeIngredient already exists";
     public static String INVALID_FILTER_PARAMETER = "Invalid filter parameter passed";
 }

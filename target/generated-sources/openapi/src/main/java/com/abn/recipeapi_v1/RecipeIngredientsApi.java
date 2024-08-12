@@ -19,28 +19,32 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-24T16:27:39.935937+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-12T11:16:38.722740+02:00[Europe/Amsterdam]")
 @Validated
 @Tag(name = "recipeIngredient", description = "the recipeIngredient API")
 public interface RecipeIngredientsApi {
 
-    default RecipeIngredientsApiDelegate getDelegate() {
-        return new RecipeIngredientsApiDelegate() {};
+    default Optional<NativeWebRequest> getRequest() {
+        return Optional.empty();
     }
 
     /**
-     * POST /recipeIngredients : Add a ingredient to a recipe
+     * POST /recipeIngredients : Add ingredients to a recipe
      *
      * @param recipeDTO Add Ingredient to Recipe (required)
      * @return Ingredient added successfully. (status code 201)
@@ -48,12 +52,12 @@ public interface RecipeIngredientsApi {
      *         or Server error (status code 500)
      */
     @Operation(
-        operationId = "addIngredientToRecipe",
-        summary = "Add a ingredient to a recipe",
+        operationId = "addIngredientsToRecipe",
+        summary = "Add ingredients to a recipe",
         tags = { "recipeIngredient" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Ingredient added successfully.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = RecipeDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request.", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
@@ -70,10 +74,30 @@ public interface RecipeIngredientsApi {
         consumes = { "application/json" }
     )
     
-    default ResponseEntity<String> addIngredientToRecipe(
+    default ResponseEntity<RecipeDTO> addIngredientsToRecipe(
         @Parameter(name = "RecipeDTO", description = "Add Ingredient to Recipe", required = true) @Valid @RequestBody RecipeDTO recipeDTO
     ) {
-        return getDelegate().addIngredientToRecipe(recipeDTO);
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"numberOfServings\" : 0, \"instructions\" : \"instructions\", \"name\" : \"name\", \"isVegetarian\" : true, \"ingredients\" : [ { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\" }, { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\" }, { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\" }, { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\" }, { \"name\" : \"name\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\" } ], \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"code\" : 6, \"message\" : \"message\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"code\" : 6, \"message\" : \"message\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
     }
 
 
@@ -108,7 +132,8 @@ public interface RecipeIngredientsApi {
         @Parameter(name = "recipeId", description = "The id of the recipe", required = true, in = ParameterIn.PATH) @PathVariable("recipeId") UUID recipeId,
         @Parameter(name = "ingredientId", description = "The id of the ingredient", required = true, in = ParameterIn.PATH) @PathVariable("ingredientId") UUID ingredientId
     ) {
-        return getDelegate().deleteRecipeIngredient(recipeId, ingredientId);
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
     }
 
 }

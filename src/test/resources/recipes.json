@@ -1,0 +1,100 @@
+[
+  {
+    "name": "Chickpea Curry",
+    "instructions": "vegetarian recipe instructions",
+    "isVegetarian": true,
+    "numberOfServings": "4",
+    "ingredients": [
+      {
+        "name": "Garlic"
+      },
+      {
+        "name": "Chickpeas"
+      },
+      {
+        "name": "Curry Powder"
+      },
+      {
+        "name": "Red Onions"
+      }
+    ]
+  },
+  {
+    "name": "Lasagna",
+    "instructions": "Lasagna recipe instructions",
+    "isVegetarian": false,
+    "numberOfServings": "6",
+    "ingredients": [
+      {
+        "name": "Onions"
+      },
+      {
+        "name": "Garlic"
+      },
+      {
+        "name": "Beef"
+      },
+      {
+        "name": "Pasta Sauce"
+      },
+      {
+        "name": "Cheese"
+      },
+      {
+        "name": "Lasagna Noodles"
+      }
+    ]
+  },
+  {
+    "name": "Pizza",
+    "instructions": "Pizza recipe instructions",
+    "isVegetarian": true,
+    "numberOfServings": "2",
+    "ingredients": [
+      {
+        "name": "Onions"
+      },
+      {
+        "name": "Garlic"
+      },
+      {
+        "name": "Peppers"
+      },
+      {
+        "name": "Pineapple"
+      },
+      {
+        "name": "Cheese"
+      },
+      {
+        "name": "Pizza sauce"
+      }
+    ]
+  },
+  {
+    "name": "Burgers",
+    "instructions": "Burgers recipe instructions",
+    "isVegetarian": false,
+    "numberOfServings": "1",
+    "ingredients": [
+      {
+        "name": "Onions"
+      },
+      {
+        "name": "Garlic"
+      },
+      {
+        "name": "Beef Patty"
+      },
+      {
+        "name": "Buns"
+      },
+      {
+        "name": "Cheese"
+      },
+      {
+        "name": "Ketchup"
+      }
+    ]
+  }
+]

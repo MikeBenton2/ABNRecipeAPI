@@ -1,0 +1,45 @@
+services:
+  recipe_db:
+    container_name: recipe_db
+    image: arm64v8/postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: recipes
+    ports:
+      - "5432:5432"
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '100m'
+        max-file: '5'
+    networks:
+      - abn-network
+
+  abnrecipeapi:
+    image: "ghcr.io/mikebenton2/abnrecipeapi/abnrecipeapi:19"
+    container_name: abnrecipeapi
+    env_file:
+      - .env
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+    restart: on-failure
+#    depends_on:
+#      recipe_db:
+#        condition: service_healthy
+    links:
+      - recipe_db
+#    healthcheck:
+#      test: [ "wget", "--spider", "-S", "http://localhost:8080/health" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+#      start_period: 15s
+    networks:
+      - abn-network
+
+networks:
+  abn-network:
+    driver: bridge

@@ -23,7 +23,8 @@ import jakarta.annotation.Generated;
  * SearchRequest
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-24T16:27:39.935937+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-12T11:16:38.722740+02:00[Europe/Amsterdam]")
+@lombok.Builder
 public class SearchRequest implements Serializable {
 
   private static final long serialVersionUID = 1L;
