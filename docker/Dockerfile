@@ -1,4 +1,5 @@
-FROM arm64v8/amazoncorretto:21-alpine
+#FROM arm64v8/eclipse-temurin:22.0.2_9-jre-alpine
+FROM arm64v8/eclipse-temurin:22.0.2_9-jre-alpine
 
 VOLUME /tmp
 
